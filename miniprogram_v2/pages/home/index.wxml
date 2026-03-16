@@ -1,0 +1,72 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container fixed-tab-space">
+    <view class="home-head row">
+      <view class="brand-wrap">
+        <view class="brand-mark">幻</view>
+        <view>
+          <view class="brand-title">幻头 HuanTou</view>
+          <view class="brand-subtitle">温暖生成你的下一张头像</view>
+        </view>
+      </view>
+      <view class="head-action" bindtap="goAssets">集</view>
+    </view>
+
+    <view class="soft-card hero-card cover-cream">
+      <view class="hero-hello">
+        <view class="hero-kicker">Hi，{{user.nickname}}</view>
+        <view class="title-lg">发现你的 <text class="hero-highlight">灵感瞬间</text></view>
+        <view class="hero-script">Welcome</view>
+        <view class="hero-subtitle">从一句话、一次上传，到一张适合社交主页的新头像。</view>
+      </view>
+    </view>
+
+    <view class="soft-card">
+      <view class="quick-grid">
+        <block wx:for="{{quickActions}}" wx:key="key">
+          <view class="quick-item" data-key="{{item.key}}" bindtap="onActionTap">
+            <view class="quick-icon">{{item.glyph}}</view>
+            <view class="quick-label">{{item.label}}</view>
+            <view class="quick-desc">{{item.desc}}</view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <view class="title-md">每日灵感</view>
+      <view class="section-more" bindtap="goCreateMenu">去创作</view>
+    </view>
+
+    <scroll-view scroll-x class="pill-row mb-18" enable-flex="true">
+      <block wx:for="{{tags}}" wx:key="*this">
+        <view class="pill {{currentTag===item?'pill-active':''}}" data-tag="{{item}}" bindtap="onTagTap">{{item}}</view>
+      </block>
+    </scroll-view>
+
+    <view class="gallery-grid">
+      <block wx:for="{{gallery}}" wx:key="id">
+        <view class="surface-card gallery-card" data-taskid="{{item.taskId}}" bindtap="onGalleryTap">
+          <view class="gallery-cover {{item.coverClass}}">
+            <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+            <view wx:if="{{item.badge}}" class="badge">{{item.badge}}</view>
+          </view>
+          <view class="gallery-body">
+            <view class="title-md">{{item.title}}</view>
+            <view class="meta-row">
+              <view class="meta-author">
+                <view class="meta-dot"></view>
+                {{item.author}}
+              </view>
+              <view class="meta-like">{{item.likes}}</view>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <bottom-tab current="home" />
+  </view>
+</view>

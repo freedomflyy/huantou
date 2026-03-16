@@ -1,0 +1,56 @@
+<view class="container">
+  <top-bar title="快速编辑" subtitle="基础参数调整" backUrl="/pages/create-menu/index" />
+
+  <view class="glass-card">
+    <view class="field-label">Provider</view>
+    <picker bindchange="onProviderChange" value="{{providerIndex}}" range="{{providerOptions}}">
+      <view class="picker-value">{{providerOptions[providerIndex]}}</view>
+    </picker>
+  </view>
+
+  <view class="glass-card">
+    <view class="field-label">输入图 URL</view>
+    <input class="input" value="{{inputImageUrl}}" bindinput="onInputUrlInput" placeholder="https://..." placeholder-style="color:#8e86a6;" />
+    <view class="grid-2 mt-12">
+      <button class="btn btn-ghost" loading="{{uploading}}" bindtap="chooseAndUpload">上传图片</button>
+      <button class="btn btn-ghost" bindtap="pickFromAssets">从资产选择</button>
+    </view>
+    <image wx:if="{{inputImageUrl}}" class="image-thumb mt-12" src="{{inputImageUrl}}" mode="aspectFill" />
+  </view>
+
+  <view class="glass-card">
+    <view class="field-label">参数</view>
+    <view class="grid-2">
+      <view>
+        <view class="field-label">rotate</view>
+        <input class="input" data-field="rotate" value="{{rotate}}" bindinput="onFieldInput" />
+      </view>
+      <view>
+        <view class="field-label">brightness</view>
+        <input class="input" data-field="brightness" value="{{brightness}}" bindinput="onFieldInput" />
+      </view>
+      <view>
+        <view class="field-label">saturation</view>
+        <input class="input" data-field="saturation" value="{{saturation}}" bindinput="onFieldInput" />
+      </view>
+      <view>
+        <view class="field-label">contrast</view>
+        <input class="input" data-field="contrast" value="{{contrast}}" bindinput="onFieldInput" />
+      </view>
+      <view>
+        <view class="field-label">format</view>
+        <input class="input" data-field="format" value="{{format}}" bindinput="onFieldInput" />
+      </view>
+      <view>
+        <view class="field-label">quality</view>
+        <input class="input" data-field="quality" value="{{quality}}" bindinput="onFieldInput" />
+      </view>
+    </view>
+    <primary-button text="创建并开始处理" loading="{{submitting}}" bind:tap="onCreateTask" />
+  </view>
+
+  <view wx:if="{{errorMsg}}" class="glass-card">
+    <view class="field-label">错误信息</view>
+    <view class="danger">{{errorMsg}}</view>
+  </view>
+</view>

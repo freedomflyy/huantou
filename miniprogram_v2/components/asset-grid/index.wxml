@@ -1,0 +1,17 @@
+<view class="grid-2">
+  <block wx:for="{{items}}" wx:key="id">
+    <view class="glass-card card-item">
+      <image class="image-thumb" src="{{item.thumbUrl}}" mode="aspectFill" data-item="{{item}}" bindtap="onPreview" />
+      <view class="muted mt-8">{{item.provider}}</view>
+      <view class="muted">{{item.expiresAt || '-'}}</view>
+      <view class="row mt-12">
+        <button wx:if="{{showFavorite}}" size="mini" class="btn-ghost mini-btn" data-item="{{item}}" bindtap="onFavorite">
+          {{item.isFavorited ? '取消收藏' : '收藏'}}
+        </button>
+        <button wx:if="{{selectMode}}" size="mini" class="btn-primary mini-btn" data-item="{{item}}" bindtap="onSelect">
+          选择
+        </button>
+      </view>
+    </view>
+  </block>
+</view>

@@ -1,0 +1,31 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container">
+    <top-bar title="创作记录" subtitle="最近生成过什么，这里一眼看清" backUrl="/pages/profile/index" rightText="创作" bind:righttap="goCreate" />
+
+    <block wx:for="{{tasks}}" wx:key="id">
+      <view class="soft-card" data-taskid="{{item.id}}" data-status="{{item.status}}" data-from="{{item.from}}" bindtap="openTask">
+        <view class="row">
+          <view>
+            <view class="title-md">{{item.modeLabel}}</view>
+            <view class="subtitle mt-8">{{item.createdAtLabel}}</view>
+          </view>
+          <view class="status-chip {{item.statusClass}}">
+            {{item.statusLabel}}
+          </view>
+        </view>
+        <view class="info-chip mt-20">{{item.styleName}}</view>
+        <view class="info-chip">{{item.ratio}}</view>
+        <view class="subtitle mt-20">{{item.prompt}}</view>
+      </view>
+    </block>
+
+    <view wx:if="{{!tasks.length}}" class="soft-card empty-state">
+      <view class="empty-badge">史</view>
+      <view class="title-md">还没有创作记录</view>
+      <view class="subtitle mt-12">先去生成一张头像，这里会自动累积你的任务历史。</view>
+    </view>
+  </view>
+</view>

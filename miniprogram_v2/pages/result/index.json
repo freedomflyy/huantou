@@ -1,0 +1,7 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "top-bar": "/components/top-bar/index",
+    "task-status-chip": "/components/task-status-chip/index"
+  }
+}

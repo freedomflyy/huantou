@@ -1,0 +1,12 @@
+<view class="top-bar">
+  <view class="row">
+    <view class="left-wrap">
+      <view wx:if="{{showBack}}" class="back-btn" bindtap="onBack">←</view>
+      <view>
+        <view class="bar-title">{{title}}</view>
+        <view wx:if="{{subtitle}}" class="bar-subtitle">{{subtitle}}</view>
+      </view>
+    </view>
+    <view wx:if="{{rightText}}" class="right-text" bindtap="onRightTap">{{rightText}}</view>
+  </view>
+</view>

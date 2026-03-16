@@ -1,0 +1,1 @@
+<button class="btn btn-primary" loading="{{loading}}" disabled="{{disabled}}" bindtap="onTap">{{text}}</button>

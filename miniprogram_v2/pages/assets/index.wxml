@@ -1,0 +1,90 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container fixed-tab-space">
+    <top-bar title="{{selectMode ? '选择作品' : '作品集'}}" subtitle="{{selectMode ? '选一张已经上传或生成过的图片继续使用' : '把喜欢的版本沉淀下来，慢慢挑'}}" showBack="{{selectMode}}" rightText="创作" bind:righttap="goCreate" />
+
+    <view class="soft-card">
+      <view class="row">
+        <view>
+          <view class="title-md">我的作品与收藏</view>
+          <view class="subtitle mt-8">这里已经开始读取真实作品数据，后面我们再继续补筛选、下载和二次编辑。</view>
+        </view>
+      </view>
+      <view class="section-chip-row mt-20">
+        <view class="pill pill-active">我的作品 {{myAssets.length}}</view>
+        <view class="pill pill-outline">收藏 {{favoriteAssets.length}}</view>
+      </view>
+      <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
+    </view>
+
+    <view class="section-block">
+      <view class="section-head">
+        <view class="title-md">我的作品</view>
+        <view class="section-more">{{myAssets.length}} 张</view>
+      </view>
+      <view class="gallery-grid">
+        <block wx:for="{{myAssets}}" wx:key="id">
+          <view class="surface-card gallery-card" data-id="{{item.id}}" data-section="mine" data-taskid="{{item.taskId}}" bindtap="onAssetTap">
+            <view class="gallery-cover {{item.coverClass}}">
+              <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+              <view wx:if="{{item.badge}}" class="badge">{{item.badge}}</view>
+            </view>
+            <view class="gallery-body">
+              <view class="title-md">{{item.title}}</view>
+              <view class="meta-row">
+                <view class="meta-author">
+                  <view class="meta-dot"></view>
+                  {{item.author}}
+                </view>
+                <view class="meta-like">{{item.likes}}</view>
+              </view>
+              <button class="btn btn-soft mt-16" data-id="{{item.id}}" data-section="mine" data-favorited="{{item.isFavorited}}" catchtap="onFavoriteTap">{{item.isFavorited ? '取消收藏' : '收藏作品'}}</button>
+            </view>
+          </view>
+        </block>
+      </view>
+      <view wx:if="{{!myAssets.length}}" class="soft-card empty-state section-empty">
+        <view class="empty-badge">作</view>
+        <view class="title-md">还没有作品</view>
+        <view class="subtitle mt-12">先去生成一张头像，这里会自动累积你的作品。</view>
+      </view>
+    </view>
+
+    <view class="section-block">
+      <view class="section-head">
+        <view class="title-md">收藏</view>
+        <view class="section-more">{{favoriteAssets.length}} 张</view>
+      </view>
+      <view class="gallery-grid">
+        <block wx:for="{{favoriteAssets}}" wx:key="id">
+          <view class="surface-card gallery-card" data-id="{{item.id}}" data-section="favorites" data-taskid="{{item.taskId}}" bindtap="onAssetTap">
+            <view class="gallery-cover {{item.coverClass}}">
+              <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+              <view wx:if="{{item.badge}}" class="badge">{{item.badge}}</view>
+            </view>
+            <view class="gallery-body">
+              <view class="title-md">{{item.title}}</view>
+              <view class="meta-row">
+                <view class="meta-author">
+                  <view class="meta-dot"></view>
+                  {{item.author}}
+                </view>
+                <view class="meta-like">{{item.likes}}</view>
+              </view>
+              <button class="btn btn-soft mt-16" data-id="{{item.id}}" data-section="favorites" data-favorited="{{item.isFavorited}}" catchtap="onFavoriteTap">取消收藏</button>
+            </view>
+          </view>
+        </block>
+      </view>
+      <view wx:if="{{!favoriteAssets.length}}" class="soft-card empty-state section-empty">
+        <view class="empty-badge">藏</view>
+        <view class="title-md">还没有收藏</view>
+        <view class="subtitle mt-12">在结果页或作品列表里点一下收藏，喜欢的版本就会沉淀到这里。</view>
+      </view>
+    </view>
+
+    <bottom-tab wx:if="{{!selectMode}}" current="assets" />
+  </view>
+</view>

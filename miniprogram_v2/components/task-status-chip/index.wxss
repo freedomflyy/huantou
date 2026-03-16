@@ -1,0 +1,26 @@
+.chip {
+  border-radius: 999rpx;
+  padding: 6rpx 16rpx;
+  font-size: 22rpx;
+  color: #ecdefe;
+  background: rgba(143, 123, 255, 0.2);
+  border: 1px solid rgba(143, 123, 255, 0.45);
+}
+
+.chip-succeeded {
+  color: #092113;
+  background: #62e7a0;
+  border-color: transparent;
+}
+
+.chip-failed {
+  color: #2b0d15;
+  background: #ff7a9c;
+  border-color: transparent;
+}
+
+.chip-running {
+  color: #220f2d;
+  background: #d46bff;
+  border-color: transparent;
+}

@@ -1,0 +1,9 @@
+.card-item {
+  margin-bottom: 0;
+  padding: 14rpx;
+}
+
+.mini-btn {
+  width: 48%;
+  margin-top: 0;
+}

@@ -1,0 +1,26 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container">
+    <top-bar title="生成中" subtitle="先喝口水，马上就好" backUrl="/pages/create-menu/index" />
+
+    <view class="soft-card progress-panel">
+      <view class="progress-badge">幻</view>
+      <view class="title-md">{{taskTitle}}</view>
+      <view class="subtitle mt-12">{{statusText}}</view>
+      <view class="status-chip {{statusClass}} mt-20">{{statusLabel}}</view>
+    </view>
+
+    <view class="soft-card">
+      <view class="row mb-18">
+        <view class="subtitle">当前进度</view>
+        <view class="title-md">{{progress}}%</view>
+      </view>
+      <view class="progress-line">
+        <view class="progress-value" style="width: {{progress}}%;"></view>
+      </view>
+      <view class="center mt-24 subtitle">{{waitText}}</view>
+    </view>
+  </view>
+</view>

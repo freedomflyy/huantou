@@ -1,0 +1,48 @@
+.workbench-frame {
+  position: relative;
+  width: 100%;
+  height: 640rpx;
+  border-radius: 34rpx;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffead8 0%, #ffd2b7 100%);
+}
+
+.brush-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 132rpx;
+  height: 132rpx;
+  margin-left: -66rpx;
+  margin-top: -66rpx;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 106, 33, 0.2);
+  color: #ffffff;
+  font-size: 34rpx;
+  font-weight: 700;
+  border: 4rpx solid rgba(245, 106, 33, 0.45);
+}
+
+.preset-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 76rpx;
+  padding: 0 24rpx;
+  margin-right: 16rpx;
+  border-radius: 22rpx;
+  background: #fff7f0;
+  border: 1px solid rgba(242, 223, 207, 0.95);
+  color: #7c6558;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.preset-chip-active {
+  background: linear-gradient(135deg, #ff7a1f 0%, #f56a21 100%);
+  color: #ffffff;
+  border-color: transparent;
+}

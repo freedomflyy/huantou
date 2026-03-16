@@ -1,0 +1,8 @@
+<view class="tab-wrap">
+  <block wx:for="{{tabs}}" wx:key="key">
+    <view class="tab-item {{current===item.key?'active':''}} {{item.primary?'primary-tab':''}}" data-key="{{item.key}}" bindtap="onTabTap">
+      <view class="tab-icon {{item.primary?'tab-icon-primary':''}}">{{item.glyph}}</view>
+      <view class="tab-text">{{item.text}}</view>
+    </view>
+  </block>
+</view>

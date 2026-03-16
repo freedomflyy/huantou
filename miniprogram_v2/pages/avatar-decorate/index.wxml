@@ -1,0 +1,117 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container decorate-page">
+    <top-bar title="头像装饰" subtitle="给你的头像加贴纸、文字或边框" />
+
+    <view class="decorate-hero soft-card">
+      <view class="preview-wrap" bindtap="previewImage">
+        <view class="preview-ring"></view>
+        <view class="preview-avatar">
+          <image wx:if="{{imageUrl}}" class="preview-image" mode="aspectFill" src="{{imageUrl}}" />
+          <view wx:else class="avatar-placeholder">
+            <view class="placeholder-badge">待补</view>
+          </view>
+        </view>
+        <view class="tool-badge">饰</view>
+      </view>
+      <view class="title-lg mt-32 center">自定义你的头像</view>
+      <view class="subtitle center mt-12">为你的 AI 头像添加贴纸、文字或边框</view>
+    </view>
+
+    <view class="decorate-tabs">
+      <block wx:for="{{tabs}}" wx:key="key">
+        <view class="decorate-tab {{activeTab===item.key ? 'decorate-tab-active' : ''}}" data-tab="{{item.key}}" bindtap="onTabTap">
+          <view class="decorate-tab-glyph">{{item.glyph}}</view>
+          <view>{{item.label}}</view>
+        </view>
+      </block>
+    </view>
+
+    <view wx:if="{{activeTab==='stickers'}}" class="decorate-body">
+      <view class="soft-card">
+        <view class="section-head">
+          <view class="title-md">最近使用</view>
+          <view class="section-more">占位</view>
+        </view>
+        <view class="decorate-grid">
+          <block wx:for="{{recentStickers}}" wx:key="id">
+            <view class="decorate-tile recent-tile" bindtap="onPlaceholderTap">
+              <view class="tile-mark">贴</view>
+            </view>
+          </block>
+        </view>
+      </view>
+
+      <view class="soft-card">
+        <view class="section-head">
+          <view class="title-md">全部贴纸</view>
+          <view class="section-more">{{activeCategory}}</view>
+        </view>
+        <view class="decorate-grid">
+          <block wx:for="{{stickerItems}}" wx:key="id">
+            <view class="decorate-tile sticker-tile" bindtap="onPlaceholderTap">
+              <view class="tile-empty"></view>
+              <view class="tile-label">{{item.title}}</view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{activeTab==='text'}}" class="decorate-body">
+      <view class="soft-card">
+        <view class="section-head">
+          <view class="title-md">全部字体</view>
+          <view class="section-more">素材待补</view>
+        </view>
+        <view class="decorate-list">
+          <block wx:for="{{fontItems}}" wx:key="id">
+            <view class="decorate-row" bindtap="onPlaceholderTap">
+              <view class="font-sample">Aa</view>
+              <view>
+                <view class="title-md">{{item.title}}</view>
+                <view class="subtitle mt-8">字体素材准备中，后续会替换为真实字形效果</view>
+              </view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <view wx:if="{{activeTab==='frames'}}" class="decorate-body">
+      <view class="soft-card">
+        <view class="section-head">
+          <view class="title-md">全部边框</view>
+          <view class="section-more">素材待补</view>
+        </view>
+        <view class="frame-grid">
+          <block wx:for="{{frameItems}}" wx:key="id">
+            <view class="frame-card" bindtap="onPlaceholderTap">
+              <view class="frame-preview">
+                <view class="frame-circle"></view>
+              </view>
+              <view class="subtitle mt-12 center">{{item.title}}</view>
+            </view>
+          </block>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="decorate-bottom">
+    <scroll-view wx:if="{{activeTab==='stickers'}}" scroll-x class="category-scroll" enable-flex="true">
+      <view class="category-row">
+        <block wx:for="{{categories}}" wx:key="*this">
+          <view class="category-pill {{activeCategory===item ? 'category-pill-active' : ''}}" data-category="{{item}}" bindtap="onCategoryTap">{{item}}</view>
+        </block>
+      </view>
+    </scroll-view>
+
+    <view class="decorate-actions">
+      <button class="btn btn-ghost decorate-reset" bindtap="onResetTap">重置</button>
+      <button class="btn btn-primary decorate-save" bindtap="onSaveTap">保存并导出</button>
+    </view>
+  </view>
+</view>

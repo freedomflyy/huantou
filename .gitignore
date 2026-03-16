@@ -1,0 +1,32 @@
+# Secrets and local config
+backend/.env
+miniprogram_v2/project.private.config.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# Node / frontend tooling
+node_modules/
+
+# Local tooling
+.codex/
+
+# Generated output and local assets not part of the current app version
+output/
+picture/
+sucai/
+贴纸、头像框/
+
+# Legacy or inactive project folders
+design-drafts/
+figma-ui/
+huanto_mp/
+miniprogram/
+stich_ui/
+un/
+uniapp/

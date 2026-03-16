@@ -1,0 +1,9 @@
+.idea-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -16rpx;
+}
+
+.idea-wrap .pill {
+  margin-bottom: 16rpx;
+}

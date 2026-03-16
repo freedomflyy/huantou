@@ -1,0 +1,67 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container">
+    <top-bar title="幻头风格迁移" subtitle="上传照片后，挑一个你喜欢的风格" backUrl="/pages/create-menu/index" />
+
+    <view class="soft-card">
+      <view class="upload-zone">
+        <view class="upload-icon">传</view>
+        <view class="title-md">上传主图</view>
+        <view class="subtitle mt-12">支持相册和拍照，先放一张人物照片进来。</view>
+        <button class="btn btn-primary mt-24" bindtap="uploadInput">选择照片</button>
+      </view>
+      <view wx:if="{{inputImageUrl}}" class="preview-frame mt-24">
+        <image class="preview-image" mode="aspectFill" src="{{inputImageUrl}}" />
+      </view>
+    </view>
+
+    <view class="soft-card">
+      <view class="section-head">
+        <view class="title-md">参考图</view>
+        <view class="section-more" bindtap="uploadReference">再传一张</view>
+      </view>
+      <view wx:if="{{referenceImageUrl}}" class="preview-frame">
+        <image class="preview-image" mode="aspectFill" src="{{referenceImageUrl}}" />
+      </view>
+      <view wx:else class="hint-row">
+        <view class="dot-glyph">荐</view>
+        <view>当前真实后端链路会一起使用参考图，请至少上传一张风格图。</view>
+      </view>
+    </view>
+
+    <view class="soft-card">
+      <view class="section-head">
+        <view class="title-md">选择艺术风格</view>
+        <view class="section-more">{{selectedStyle}}</view>
+      </view>
+      <scroll-view scroll-x class="style-rail" enable-flex="true">
+        <block wx:for="{{styleCards}}" wx:key="id">
+          <view class="style-card" data-style="{{item.name}}" bindtap="onStyleTap">
+            <view class="style-cover {{item.coverClass}}">
+              <view wx:if="{{item.hot}}" class="badge badge-hot">HOT</view>
+              <view wx:if="{{selectedStyle===item.name}}" class="badge">{{item.name}}</view>
+            </view>
+            <view class="style-title">{{item.name}}</view>
+            <view class="style-desc">{{item.desc}}</view>
+          </view>
+        </block>
+      </scroll-view>
+    </view>
+
+    <view class="soft-card">
+      <view class="field-label">迁移说明</view>
+      <textarea class="textarea-box" value="{{prompt}}" bindinput="onPromptInput" placeholder="例如：保留人物神态和五官，把画面换成童话油画质感，整体更温暖" placeholder-style="color:#b49b8b;" />
+      <view class="field-label mt-24">候选张数</view>
+      <view class="idea-wrap">
+        <block wx:for="{{outputCountOptions}}" wx:key="value">
+          <view class="pill {{selectedOutputCount===item.value?'pill-active':''}}" data-count="{{item.value}}" bindtap="onOutputCountTap">{{item.label}}</view>
+        </block>
+      </view>
+      <view class="subtitle mt-20">预计消耗 {{rules.style_transfer_cost}} 积分，本次会返回 {{selectedOutputCount}} 张风格候选图。</view>
+      <primary-button text="开始转绘" loading="{{submitting}}" bind:tap="onCreateTask" />
+      <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
+    </view>
+  </view>
+</view>

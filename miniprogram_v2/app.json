@@ -1,0 +1,28 @@
+{
+  "pages": [
+    "pages/login/index",
+    "pages/home/index",
+    "pages/create-menu/index",
+    "pages/assets/index",
+    "pages/profile/index",
+    "pages/text-generate/index",
+    "pages/image-edit/index",
+    "pages/image-reference/index",
+    "pages/loading/index",
+    "pages/result/index",
+    "pages/avatar-decorate/index",
+    "pages/history/index",
+    "pages/service/index",
+    "pages/points/index",
+    "pages/quick-edit/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "幻头",
+    "navigationBarBackgroundColor": "#fff7f1",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#fff7f1",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

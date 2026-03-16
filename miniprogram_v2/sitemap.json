@@ -1,0 +1,9 @@
+{
+  "desc": "Huanto mini program sitemap",
+  "rules": [
+    {
+      "action": "allow",
+      "page": "*"
+    }
+  ]
+}

@@ -1,0 +1,3 @@
+<view class="chip chip-{{status}}">
+  {{textFor(status)}}
+</view>

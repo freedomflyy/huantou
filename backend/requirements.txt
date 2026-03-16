@@ -1,0 +1,14 @@
+fastapi==0.116.1
+uvicorn[standard]==0.35.0
+sqlalchemy==2.0.43
+psycopg[binary]==3.2.10
+pydantic-settings==2.10.1
+httpx==0.28.1
+tencentcloud-sdk-python-sts==3.0.1459
+tencentcloud-sdk-python-tms==3.1.10
+cos-python-sdk-v5==1.9.41
+Pillow==11.3.0
+python-multipart==0.0.20
+PyJWT==2.10.1
+huggingface_hub==0.34.4
+sentry-sdk==2.35.0

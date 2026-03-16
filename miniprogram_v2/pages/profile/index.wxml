@@ -1,0 +1,51 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container fixed-tab-space">
+    <view class="soft-card profile-hero">
+      <view class="profile-top">
+        <view>
+          <view class="profile-name">{{user.nickname}}</view>
+          <view class="profile-bio">{{user.signature}}</view>
+        </view>
+        <view class="avatar">桃</view>
+      </view>
+      <view class="profile-stats">
+        <view class="stat-item">
+          <view class="stat-num">{{user.pointsBalance}}</view>
+          <view class="stat-label">当前积分</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-num">{{user.works}}</view>
+          <view class="stat-label">已生成</view>
+        </view>
+        <view class="stat-item">
+          <view class="stat-num">{{user.favorites}}</view>
+          <view class="stat-label">收藏</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="soft-card">
+      <block wx:for="{{menus}}" wx:key="key">
+        <view class="menu-link" data-key="{{item.key}}" bindtap="onMenuTap">
+          <view class="menu-left">
+            <view class="menu-icon">{{item.glyph}}</view>
+            <view>
+              <view class="title-md">{{item.title}}</view>
+              <view class="subtitle mt-8">{{item.note}}</view>
+            </view>
+          </view>
+          <view class="menu-arrow">›</view>
+        </view>
+      </block>
+    </view>
+
+    <view class="soft-card">
+      <button class="btn btn-ghost" bindtap="goOnboarding">查看欢迎页</button>
+    </view>
+
+    <bottom-tab current="profile" />
+  </view>
+</view>

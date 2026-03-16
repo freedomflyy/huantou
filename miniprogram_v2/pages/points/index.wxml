@@ -1,0 +1,99 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container">
+    <top-bar title="会员中心" subtitle="积分、权益和套餐都放在这里" backUrl="/pages/profile/index" />
+
+    <view class="soft-card profile-hero">
+      <view class="row">
+        <view>
+          <view class="eyebrow" style="color: rgba(255,255,255,0.85);">当前余额</view>
+          <view class="profile-name">{{pointsBalance}} 积分</view>
+          <view class="profile-bio">文生图 {{rules.txt2img_cost}} / 风格迁移 {{rules.style_transfer_cost}} / 精修 {{rules.img2img_cost}}</view>
+        </view>
+      </view>
+      <button class="btn {{checkInToday ? 'btn-soft' : 'btn-primary'}} mt-24" disabled="{{checkInToday || checkInLoading}}" bindtap="onSignTap">
+        {{checkInLoading ? '签到中...' : (checkInToday ? ('今日已签到 +' + checkInReward) : ('签到领 ' + checkInReward + ' 积分'))}}
+      </button>
+      <view class="subtitle mt-12">
+        {{checkInToday ? ('今日奖励已到账' + (checkInTimeLabel ? (' · ' + checkInTimeLabel) : '')) : '每天打开小程序签到一次，积分可以直接用于生成头像。'}}
+      </view>
+    </view>
+
+    <view class="soft-card">
+      <view class="section-head">
+        <view class="title-md">激活码兑换</view>
+      </view>
+      <input class="input-box" value="{{redeemCode}}" bindinput="onRedeemCodeInput" placeholder="输入口令兑换 1000 积分" placeholder-style="color:#b49b8b;" />
+      <view class="subtitle mt-12">当前口令兑换成功后可获得 1000 积分，每个账号限 1 次。</view>
+      <button class="btn btn-primary mt-24" loading="{{redeemLoading}}" disabled="{{redeemLoading || !redeemCode}}" bindtap="onRedeemTap">立即兑换</button>
+    </view>
+
+    <view class="soft-card">
+      <view class="section-head">
+        <view class="title-md">尊享会员权益</view>
+      </view>
+      <view class="menu-link">
+        <view class="menu-left">
+          <view class="menu-icon">快</view>
+          <view>
+            <view class="title-md">极速生成</view>
+            <view class="subtitle mt-8">热门时段也能更快看到结果</view>
+          </view>
+        </view>
+      </view>
+      <view class="menu-link">
+        <view class="menu-left">
+          <view class="menu-icon">存</view>
+          <view>
+            <view class="title-md">长期保存</view>
+            <view class="subtitle mt-8">作品集与收藏更适合长期沉淀</view>
+          </view>
+        </view>
+      </view>
+      <view class="menu-link">
+        <view class="menu-left">
+          <view class="menu-icon">新</view>
+          <view>
+            <view class="title-md">新风格优先体验</view>
+            <view class="subtitle mt-8">新模板、新玩法可以更早试到</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="soft-card">
+      <view class="section-head">
+        <view class="title-md">积分充值套餐</view>
+      </view>
+      <block wx:for="{{packages}}" wx:key="id">
+        <view class="surface-card package-card {{item.highlight?'highlight':''}}">
+          <view class="row">
+            <view>
+              <view class="title-md">{{item.name}} · {{item.points}}积分</view>
+              <view class="subtitle mt-8">赠送 {{item.bonus}} 积分奖励</view>
+            </view>
+            <view class="package-price">{{item.price}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <view class="soft-card">
+      <view class="section-head">
+        <view class="title-md">积分流水</view>
+      </view>
+      <block wx:for="{{ledgers}}" wx:key="id">
+        <view class="menu-link">
+          <view>
+            <view class="title-md">{{item.title}}</view>
+            <view class="subtitle mt-8">{{item.reason}} · {{item.time}}</view>
+          </view>
+          <view class="{{item.delta>=0?'status-chip status-succeeded':'status-chip status-failed'}}">{{item.delta>=0?'+':''}}{{item.delta}}</view>
+        </view>
+      </block>
+      <view wx:if="{{!ledgers.length}}" class="subtitle">还没有积分记录，先签到或创作一次吧。</view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,15 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container">
+    <top-bar title="{{pageTitle}}" subtitle="{{pageSubtitle}}" backUrl="/pages/profile/index" />
+
+    <block wx:for="{{blocks}}" wx:key="title">
+      <view class="soft-card">
+        <view class="title-md">{{item.title}}</view>
+        <view class="subtitle mt-16">{{item.text}}</view>
+      </view>
+    </block>
+  </view>
+</view>

@@ -1,0 +1,19 @@
+.onboarding-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 80rpx;
+  padding-bottom: 120rpx;
+}
+
+.onboarding-visual {
+  width: 100%;
+  height: 520rpx;
+  border-radius: 42rpx;
+  margin-bottom: 40rpx;
+}
+
+.onboarding-copy {
+  margin-bottom: 12rpx;
+}

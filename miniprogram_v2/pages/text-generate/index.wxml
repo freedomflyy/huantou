@@ -1,0 +1,55 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container">
+    <top-bar title="幻头 · AI 绘画" subtitle="一句描述，生成一张更像你的头像" backUrl="/pages/create-menu/index" rightText="灵感" bind:righttap="randomPrompt" />
+
+    <view class="soft-card">
+      <view class="row mb-18">
+        <view class="eyebrow">随机灵感</view>
+        <view class="section-more" bindtap="randomPrompt">换一个</view>
+      </view>
+      <view class="hint-row">
+        <view class="dot-glyph">AI</view>
+        <view>{{inspirationText}}</view>
+      </view>
+
+      <view class="field-label mt-24">你的描述</view>
+      <textarea class="textarea-box" value="{{prompt}}" bindinput="onPromptInput" placeholder="输入你的创意，例如：温暖阳光下的女生头像，治愈插画风，适合作为微信头像" placeholder-style="color:#b49b8b;" />
+
+      <view class="field-label mt-24">不希望出现（可选）</view>
+      <textarea class="textarea-box" value="{{negativePrompt}}" bindinput="onNegativePromptInput" placeholder="例如：模糊、过暗、畸形、杂乱背景" placeholder-style="color:#b49b8b;" />
+    </view>
+
+    <view class="soft-card">
+      <view class="field-label">推荐风格</view>
+      <view class="idea-wrap">
+        <block wx:for="{{ideas}}" wx:key="*this">
+          <view class="pill {{selectedIdea===item?'pill-active':''}}" data-idea="{{item}}" bindtap="onIdeaTap">{{item}}</view>
+        </block>
+      </view>
+    </view>
+
+    <view class="soft-card">
+      <view class="field-label">生成比例</view>
+      <view class="ratio-grid">
+        <block wx:for="{{ratios}}" wx:key="value">
+          <view class="ratio-card {{selectedRatio===item.value?'active':''}}" data-ratio="{{item.value}}" bindtap="onRatioTap">
+            <view class="ratio-figure">{{item.value}}</view>
+            <view class="ratio-note">{{item.label}}</view>
+          </view>
+        </block>
+      </view>
+      <view class="field-label mt-24">候选张数</view>
+      <view class="idea-wrap">
+        <block wx:for="{{outputCountOptions}}" wx:key="value">
+          <view class="pill {{selectedOutputCount===item.value?'pill-active':''}}" data-count="{{item.value}}" bindtap="onOutputCountTap">{{item.label}}</view>
+        </block>
+      </view>
+      <view class="subtitle mt-20">预计消耗 {{rules.txt2img_cost}} 积分，本次会返回 {{selectedOutputCount}} 张候选图。</view>
+      <primary-button text="立即生成" loading="{{submitting}}" bind:tap="onCreateTask" />
+      <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
+    </view>
+  </view>
+</view>

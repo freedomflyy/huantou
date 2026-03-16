@@ -1,0 +1,18 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container onboarding-shell">
+    <view class="onboarding-visual cover-sunset"></view>
+
+    <view class="onboarding-copy">
+      <view class="title-lg">幻头</view>
+      <view class="title-lg mt-12">把日常照片，变成更有故事感的头像</view>
+      <view class="subtitle mt-20">现在已经开始接入真实后端，先登录就能体验作品、收藏、积分和生成链路。</view>
+    </view>
+
+    <button class="btn btn-primary mt-32" loading="{{submitting}}" bindtap="enterApp">微信一键进入</button>
+    <button class="btn btn-soft mt-16" loading="{{submitting}}" bindtap="enterApp">登录并进入首页</button>
+    <view wx:if="{{errorMsg}}" class="subtitle mt-20">{{errorMsg}}</view>
+  </view>
+</view>

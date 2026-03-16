@@ -1,0 +1,8 @@
+{
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "top-bar": "/components/top-bar/index",
+    "bottom-tab": "/components/bottom-tab/index",
+    "primary-button": "/components/primary-button/index"
+  }
+}

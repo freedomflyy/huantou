@@ -1,0 +1,77 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container">
+    <top-bar title="作品详情" subtitle="已为你挑出最适合作为头像的版本" backUrl="/pages/assets/index" />
+
+    <view wx:if="{{task}}" class="soft-card">
+      <view class="result-cover {{task.coverClass}}">
+        <image wx:if="{{task.displayImageUrl}}" class="preview-image" mode="aspectFill" src="{{task.displayImageUrl}}" bindtap="previewImage" data-url="{{task.displayImageUrl}}" />
+        <view class="result-overlay">
+          <view class="title-md">{{task.styleName}}</view>
+          <view class="subtitle mt-8">{{task.modeLabel}} · {{task.ratio}}</view>
+        </view>
+      </view>
+    </view>
+    <view wx:else class="soft-card empty-state">
+      <view class="empty-badge">图</view>
+      <view class="title-md">暂时没有找到这张作品</view>
+      <view class="subtitle mt-12">可以先返回创作工坊，再生成一张新的头像。</view>
+    </view>
+
+    <view wx:if="{{task}}" class="soft-card">
+      <view class="section-head">
+        <view class="title-md">生成参数</view>
+        <view class="section-more" bindtap="copyPrompt">复制提示词</view>
+      </view>
+      <view class="info-chip">{{task.modeLabel}}</view>
+      <view class="info-chip">{{task.styleName}}</view>
+      <view class="info-chip">{{task.ratio}}</view>
+      <view class="info-chip">候选 {{task.outputCount}} 张</view>
+      <view class="subtitle mt-20">{{task.prompt}}</view>
+      <view class="subtitle mt-16">创建时间 {{task.createdAtLabel}}<text wx:if="{{task.finishedAtLabel}}"> · 完成 {{task.finishedAtLabel}}</text></view>
+      <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
+    </view>
+
+    <view wx:if="{{outputs.length}}" class="soft-card">
+      <view class="section-head">
+        <view class="title-md">候选结果</view>
+        <view class="section-more">{{outputs.length}} 张</view>
+      </view>
+      <view class="mini-grid">
+        <block wx:for="{{outputs}}" wx:key="id">
+          <view class="surface-card mini-card">
+            <view class="mini-cover {{item.coverClass}}" bindtap="previewImage" data-url="{{item.fileUrl}}">
+              <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+              <view wx:if="{{item.badge}}" class="badge">{{item.badge}}</view>
+            </view>
+            <view class="title-md mt-16">{{item.title}}</view>
+            <view class="subtitle mt-8">{{item.subtitle}}</view>
+            <button class="btn btn-ghost mt-16" data-id="{{item.id}}" data-favorited="{{item.isFavorited}}" bindtap="onFavoriteTap">{{item.isFavorited ? '取消收藏' : '收藏这一版'}}</button>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view wx:if="{{task && !outputs.length}}" class="soft-card empty-state">
+      <view class="empty-badge">果</view>
+      <view class="title-md">{{task.status==='failed' ? '这次生成没有成功' : '作品还没有落库'}}</view>
+      <view class="subtitle mt-12">{{errorMsg || '等后端任务完成或工作流写入作品后，这里会自动展示图片。'}}</view>
+    </view>
+
+    <view wx:if="{{task && task.displayImageUrl}}" class="soft-card">
+      <view class="section-head">
+        <view class="title-md">下一步装饰</view>
+        <view class="section-more">贴纸 / 文字 / 边框</view>
+      </view>
+      <view class="subtitle">如果你想继续给这张头像加装饰，可以进入头像装饰页继续处理。</view>
+      <button class="btn btn-primary mt-24" bindtap="goDecorate">进入头像装饰</button>
+    </view>
+
+    <view class="action-row">
+      <button class="btn btn-ghost" bindtap="goSource">再次创作</button>
+      <button class="btn btn-primary" bindtap="goAssets">进入作品集</button>
+    </view>
+  </view>
+</view>

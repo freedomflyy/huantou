@@ -1,0 +1,53 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container">
+    <top-bar title="AI 精修工作台" subtitle="换背景、局部重绘和氛围增强" backUrl="/pages/create-menu/index" rightText="换图" bind:righttap="chooseAndUpload" />
+
+    <view class="soft-card">
+      <view wx:if="{{inputImageUrl}}" class="workbench-frame">
+        <image class="preview-image" mode="aspectFill" src="{{inputImageUrl}}" />
+        <view class="brush-ring">修</view>
+      </view>
+      <view wx:else class="upload-zone">
+        <view class="upload-icon">修</view>
+        <view class="title-md">先上传一张头像</view>
+        <view class="subtitle mt-12">放一张你的原图，我们后面会把这里接上真正的精修链路。</view>
+        <button class="btn btn-primary mt-24" bindtap="chooseAndUpload">选择头像</button>
+      </view>
+    </view>
+
+    <scroll-view scroll-x class="pill-row mb-18" enable-flex="true">
+      <block wx:for="{{tabs}}" wx:key="*this">
+        <view class="pill {{currentTab===item?'pill-active':''}}" data-tab="{{item}}" bindtap="onTabTap">{{item}}</view>
+      </block>
+    </scroll-view>
+
+    <view class="soft-card">
+      <view class="field-label">快捷预设</view>
+      <scroll-view scroll-x class="style-rail" enable-flex="true">
+        <block wx:for="{{presets}}" wx:key="*this">
+          <view class="preset-chip {{selectedPreset===item?'preset-chip-active':''}}" data-preset="{{item}}" bindtap="onPresetTap">{{item}}</view>
+        </block>
+      </scroll-view>
+
+      <view class="hint-row mt-20">
+        <view class="dot-glyph">试</view>
+        <view>试试说：“帮我戴上一副复古红框眼镜” 或 “把背景换成奶油咖啡馆”。</view>
+      </view>
+
+      <view class="field-label mt-24">修图需求</view>
+      <textarea class="textarea-box" value="{{prompt}}" bindinput="onPromptInput" placeholder="输入你的修图需求，比如：保留五官不变，换成暖阳背景，整体更像插画头像" placeholder-style="color:#b49b8b;" />
+      <view class="field-label mt-24">候选张数</view>
+      <view class="idea-wrap">
+        <block wx:for="{{outputCountOptions}}" wx:key="value">
+          <view class="pill {{selectedOutputCount===item.value?'pill-active':''}}" data-count="{{item.value}}" bindtap="onOutputCountTap">{{item.label}}</view>
+        </block>
+      </view>
+      <view class="subtitle mt-20">预计消耗 {{rules.img2img_cost}} 积分，本次会返回 {{selectedOutputCount}} 张精修候选图。</view>
+      <primary-button text="开始精修" loading="{{submitting}}" bind:tap="onCreateTask" />
+      <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
+    </view>
+  </view>
+</view>
