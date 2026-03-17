@@ -2,52 +2,93 @@
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="container">
-    <top-bar title="AI 精修工作台" subtitle="换背景、局部重绘和氛围增强" backUrl="/pages/create-menu/index" rightText="换图" bind:righttap="chooseAndUpload" />
+  <view class="edit-nav">
+    <view class="edit-nav-back" bindtap="onBack">←</view>
+    <view class="edit-nav-center">
+      <view class="edit-nav-title">AI 幻头</view>
+      <view class="edit-nav-subtitle">一句话智能修改你的头像</view>
+    </view>
+    <view class="edit-nav-help" bindtap="onHelpTap">?</view>
+  </view>
 
-    <view class="soft-card">
-      <view wx:if="{{inputImageUrl}}" class="workbench-frame">
+  <view class="container image-edit-page">
+    <view class="preview-section">
+      <view wx:if="{{inputImageUrl}}" class="avatar-preview-card">
         <image class="preview-image" mode="aspectFill" src="{{inputImageUrl}}" />
-        <view class="brush-ring">修</view>
+        <view class="avatar-edit-badge">修</view>
       </view>
-      <view wx:else class="upload-zone">
-        <view class="upload-icon">修</view>
-        <view class="title-md">先上传一张头像</view>
-        <view class="subtitle mt-12">放一张你的原图，我们后面会把这里接上真正的精修链路。</view>
-        <button class="btn btn-primary mt-24" bindtap="chooseAndUpload">选择头像</button>
+      <view wx:else class="avatar-preview-card avatar-preview-empty" bindtap="chooseAndUpload">
+        <view class="upload-icon">传</view>
+        <view class="title-md">上传头像开始编辑</view>
+        <view class="subtitle mt-12">先上传并裁成正方形头像，再进行智能修改。</view>
+      </view>
+
+      <view class="preview-action-row">
+        <button class="preview-action preview-action-ghost" bindtap="chooseAndUpload">重新上传</button>
+        <button class="preview-action preview-action-primary" bindtap="recropCurrent">裁剪</button>
       </view>
     </view>
 
-    <scroll-view scroll-x class="pill-row mb-18" enable-flex="true">
-      <block wx:for="{{tabs}}" wx:key="*this">
-        <view class="pill {{currentTab===item?'pill-active':''}}" data-tab="{{item}}" bindtap="onTabTap">{{item}}</view>
-      </block>
-    </scroll-view>
+    <view class="soft-card reference-card">
+      <view class="reference-head">
+        <view class="reference-title">参考图设置（可选）</view>
+        <view class="reference-tip">i</view>
+      </view>
+      <view class="reference-body">
+        <view class="reference-upload-box" bindtap="chooseReferenceImage">
+          <image wx:if="{{referenceImageUrl}}" class="preview-image" mode="aspectFill" src="{{referenceImageUrl}}" />
+          <view wx:else class="reference-upload-empty">
+            <view class="reference-upload-icon">图</view>
+            <view class="reference-upload-text">点击上传</view>
+          </view>
+        </view>
 
-    <view class="soft-card">
-      <view class="field-label">快捷预设</view>
-      <scroll-view scroll-x class="style-rail" enable-flex="true">
-        <block wx:for="{{presets}}" wx:key="*this">
-          <view class="preset-chip {{selectedPreset===item?'preset-chip-active':''}}" data-preset="{{item}}" bindtap="onPresetTap">{{item}}</view>
+        <view class="reference-copy">
+          <view class="reference-text">
+            结合文字指令，AI 将参考此图的<text class="reference-highlight">构图、光影及特征</text>进行修改。
+          </view>
+          <view class="reference-format">支持 JPG/PNG/HEIC 格式</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="quick-section">
+      <view class="quick-section-title">快速编辑</view>
+      <scroll-view scroll-x class="quick-scroll" enable-flex="true">
+        <block wx:for="{{quickActions}}" wx:key="key">
+          <view class="quick-pill {{selectedQuickAction===item.key ? 'quick-pill-active' : ''}}" data-key="{{item.key}}" bindtap="onQuickActionTap">
+            <view class="quick-pill-icon">{{item.glyph}}</view>
+            <view class="quick-pill-text">{{item.title}}</view>
+          </view>
         </block>
       </scroll-view>
+    </view>
 
-      <view class="hint-row mt-20">
-        <view class="dot-glyph">试</view>
-        <view>试试说：“帮我戴上一副复古红框眼镜” 或 “把背景换成奶油咖啡馆”。</view>
+    <view class="soft-card command-card">
+      <view class="command-title">智能指令</view>
+      <view class="command-box">
+        <textarea
+          class="textarea-box command-textarea"
+          value="{{prompt}}"
+          bindinput="onPromptInput"
+          placeholder="例如：换成短发，海滩背景"
+          placeholder-style="color:#a5b2c8;"
+        />
+        <button class="command-send" bindtap="onCreateTask">></button>
       </view>
 
-      <view class="field-label mt-24">修图需求</view>
-      <textarea class="textarea-box" value="{{prompt}}" bindinput="onPromptInput" placeholder="输入你的修图需求，比如：保留五官不变，换成暖阳背景，整体更像插画头像" placeholder-style="color:#b49b8b;" />
-      <view class="field-label mt-24">候选张数</view>
-      <view class="idea-wrap">
-        <block wx:for="{{outputCountOptions}}" wx:key="value">
-          <view class="pill {{selectedOutputCount===item.value?'pill-active':''}}" data-count="{{item.value}}" bindtap="onOutputCountTap">{{item.label}}</view>
+      <view class="command-hint-wrap">
+        <block wx:for="{{promptHints}}" wx:key="id">
+          <view class="command-hint" data-id="{{item.id}}" bindtap="onPromptHintTap">{{item.label}}</view>
         </block>
       </view>
-      <view class="subtitle mt-20">预计消耗 {{rules.img2img_cost}} 积分，本次会返回 {{selectedOutputCount}} 张精修候选图。</view>
-      <primary-button text="开始精修" loading="{{submitting}}" bind:tap="onCreateTask" />
+
       <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
     </view>
+  </view>
+
+  <view class="edit-action-bar">
+    <button class="edit-submit-btn" loading="{{submitting}}" bindtap="onCreateTask">开始智能编辑</button>
+    <view class="edit-cost-tip">本次编辑将消耗 {{rules.img2img_cost}} 幻豆 (余额: {{pointsBalance}})</view>
   </view>
 </view>

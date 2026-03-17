@@ -2,10 +2,12 @@
   "pages": [
     "pages/login/index",
     "pages/home/index",
+    "pages/square/index",
     "pages/create-menu/index",
     "pages/assets/index",
     "pages/profile/index",
     "pages/text-generate/index",
+    "pages/avatar-crop/index",
     "pages/image-edit/index",
     "pages/image-reference/index",
     "pages/loading/index",

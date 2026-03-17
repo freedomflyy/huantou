@@ -1,0 +1,122 @@
+.crop-page {
+  padding-bottom: 140rpx;
+}
+
+.crop-stage {
+  display: flex;
+  justify-content: center;
+}
+
+.crop-area {
+  position: relative;
+  border-radius: 42rpx;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 30%, rgba(255, 234, 218, 0.72), rgba(255, 244, 236, 0.96) 62%),
+    linear-gradient(180deg, #fffaf6 0%, #fff4eb 100%);
+  box-shadow: inset 0 0 0 2rpx rgba(255, 255, 255, 0.88);
+}
+
+.crop-stage-image {
+  position: absolute;
+}
+
+.crop-selection {
+  position: absolute;
+  box-sizing: border-box;
+  border: 2rpx solid rgba(255, 255, 255, 0.96);
+  box-shadow: 0 0 0 9999rpx rgba(28, 17, 12, 0.42);
+}
+
+.crop-grid-line {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.v-line {
+  top: 0;
+  bottom: 0;
+  width: 2rpx;
+}
+
+.h-line {
+  left: 0;
+  right: 0;
+  height: 2rpx;
+}
+
+.v-line.line-1 {
+  left: 33.3333%;
+}
+
+.v-line.line-2 {
+  left: 66.6666%;
+}
+
+.h-line.line-1 {
+  top: 33.3333%;
+}
+
+.h-line.line-2 {
+  top: 66.6666%;
+}
+
+.crop-corner {
+  position: absolute;
+  width: 32rpx;
+  height: 32rpx;
+  box-sizing: border-box;
+  border-color: #ffffff;
+}
+
+.crop-corner.tl {
+  left: -2rpx;
+  top: -2rpx;
+  border-left: 6rpx solid #ffffff;
+  border-top: 6rpx solid #ffffff;
+}
+
+.crop-corner.tr {
+  right: -2rpx;
+  top: -2rpx;
+  border-right: 6rpx solid #ffffff;
+  border-top: 6rpx solid #ffffff;
+}
+
+.crop-corner.bl {
+  left: -2rpx;
+  bottom: -2rpx;
+  border-left: 6rpx solid #ffffff;
+  border-bottom: 6rpx solid #ffffff;
+}
+
+.crop-corner.br {
+  right: -2rpx;
+  bottom: -2rpx;
+  border-right: 6rpx solid #ffffff;
+  border-bottom: 6rpx solid #ffffff;
+}
+
+.crop-resize-handle {
+  position: absolute;
+  right: -22rpx;
+  bottom: -22rpx;
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #ff7a1f 0%, #f56a21 100%);
+  box-shadow: 0 14rpx 26rpx rgba(245, 106, 33, 0.24);
+}
+
+.crop-caption {
+  margin-top: 24rpx;
+  text-align: center;
+}
+
+.crop-canvas {
+  position: fixed;
+  left: -2000px;
+  top: -2000px;
+  width: 1024px;
+  height: 1024px;
+}

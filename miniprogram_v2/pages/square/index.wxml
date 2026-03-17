@@ -1,0 +1,44 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container fixed-tab-space square-page">
+    <view class="square-head">
+      <view>
+        <view class="title-lg">发现广场</view>
+        <view class="subtitle mt-8">看看别人生成的头像风格，灵感可以直接带走。</view>
+      </view>
+      <button class="square-create-btn" bindtap="goCreate">去创作</button>
+    </view>
+
+    <view class="soft-card square-tabs-card">
+      <view class="plaza-tabs">
+        <block wx:for="{{plazaTabs}}" wx:key="*this">
+          <view class="plaza-tab {{currentPlazaTab===item ? 'plaza-tab-active' : ''}}" data-tab="{{item}}" bindtap="onPlazaTabTap">{{item}}</view>
+        </block>
+      </view>
+      <view class="subtitle mt-16">热门适合看趋势，最新更适合找真实出图质感。</view>
+    </view>
+
+    <view class="square-grid">
+      <block wx:for="{{displayGallery}}" wx:key="id">
+        <view class="square-card" data-taskid="{{item.taskId}}" bindtap="onGalleryTap">
+          <view class="square-cover {{item.coverClass}}">
+            <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+          </view>
+          <view class="square-body">
+            <view class="title-md">{{item.title}}</view>
+            <view class="subtitle mt-8">{{item.badge}}</view>
+            <view class="square-author-row">
+              <view class="square-avatar-dot"></view>
+              <view class="square-author">{{item.creatorName}}</view>
+            </view>
+            <view class="square-generate-btn">生成同款</view>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <bottom-tab current="square" />
+  </view>
+</view>

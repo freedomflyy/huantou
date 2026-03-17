@@ -2,10 +2,30 @@
   margin-bottom: 8rpx;
 }
 
-.section-chip-row {
+.assets-tab-row {
   display: flex;
-  flex-wrap: wrap;
   gap: 16rpx;
+}
+
+.assets-tab {
+  flex: 1;
+  height: 82rpx;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 248, 242, 0.95);
+  color: #8a7467;
+  font-size: 24rpx;
+  font-weight: 700;
+  border: 1px solid rgba(242, 223, 207, 0.95);
+}
+
+.assets-tab-active {
+  background: linear-gradient(135deg, #ff7a1f 0%, #f56a21 100%);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 12rpx 24rpx rgba(245, 106, 33, 0.18);
 }
 
 .section-empty {

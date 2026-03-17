@@ -42,8 +42,41 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background:
-    linear-gradient(135deg, rgba(255, 244, 236, 0.95), rgba(240, 245, 236, 0.92));
+  background: linear-gradient(135deg, rgba(255, 244, 236, 0.95), rgba(240, 245, 236, 0.92));
+}
+
+.avatar-placeholder-upload {
+  flex-direction: column;
+  padding: 48rpx 40rpx;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.placeholder-icon {
+  width: 108rpx;
+  height: 108rpx;
+  border-radius: 999rpx;
+  background: rgba(245, 106, 33, 0.14);
+  color: #241912;
+  font-size: 52rpx;
+  font-weight: 700;
+  line-height: 108rpx;
+  text-align: center;
+}
+
+.placeholder-title {
+  margin-top: 24rpx;
+  color: #241912;
+  font-size: 40rpx;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.placeholder-copy {
+  margin-top: 14rpx;
+  color: #5f4b3f;
+  font-size: 24rpx;
+  line-height: 1.7;
 }
 
 .placeholder-badge {
@@ -57,6 +90,82 @@
   line-height: 56rpx;
   text-align: center;
   background: rgba(255, 255, 255, 0.76);
+}
+
+.sticker-area {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 3;
+}
+
+.text-area {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+}
+
+.text-layer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placed-sticker {
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 20rpx;
+}
+
+.placed-sticker-active {
+  box-shadow: 0 0 0 4rpx rgba(245, 106, 33, 0.18);
+}
+
+.placed-remove {
+  position: absolute;
+  right: -10rpx;
+  top: -10rpx;
+  width: 36rpx;
+  height: 36rpx;
+  border-radius: 999rpx;
+  background: rgba(36, 25, 18, 0.82);
+  color: #ffffff;
+  font-size: 24rpx;
+  line-height: 36rpx;
+  text-align: center;
+}
+
+.preview-text {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 10rpx 22rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 28rpx;
+  font-weight: 700;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-frame-shell {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.preview-frame-overlay {
+  position: absolute;
+  left: -6%;
+  top: -6%;
+  width: 112%;
+  height: 112%;
 }
 
 .tool-badge {
@@ -74,6 +183,13 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 18rpx 34rpx rgba(245, 106, 33, 0.24);
+  z-index: 6;
+}
+
+.decorate-inline-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 20rpx;
 }
 
 .decorate-tabs {
@@ -139,6 +255,11 @@
   flex-direction: column;
 }
 
+.decorate-tile-active {
+  border-color: rgba(245, 106, 33, 0.28);
+  background: #fff7f0;
+}
+
 .recent-tile {
   min-height: 150rpx;
 }
@@ -173,35 +294,39 @@
   margin-top: 12rpx;
   color: #aa8a74;
   font-size: 20rpx;
+  text-align: center;
 }
 
-.decorate-list {
-  display: flex;
-  flex-direction: column;
-  gap: 18rpx;
+.material-tile-image {
+  width: 84rpx;
+  height: 84rpx;
 }
 
-.decorate-row {
+.color-chip-row {
   display: flex;
-  align-items: center;
-  gap: 18rpx;
-  padding: 18rpx;
-  border-radius: 28rpx;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(255, 249, 244, 0.92));
+  flex-wrap: wrap;
+  gap: 14rpx;
+}
+
+.color-chip {
+  min-width: 118rpx;
+  height: 62rpx;
+  padding: 0 18rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 246, 240, 0.9);
   border: 1px solid rgba(242, 223, 207, 0.92);
-}
-
-.font-sample {
-  width: 92rpx;
-  height: 92rpx;
-  border-radius: 26rpx;
-  background: rgba(255, 244, 236, 0.88);
-  color: #f56a21;
-  font-size: 34rpx;
+  color: #8b766a;
+  font-size: 22rpx;
   font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.color-chip-active {
+  background: linear-gradient(135deg, #ff7a1f 0%, #f56a21 100%);
+  color: #ffffff;
+  border-color: transparent;
 }
 
 .frame-grid {
@@ -218,6 +343,11 @@
   box-shadow: 0 14rpx 28rpx rgba(223, 151, 93, 0.08);
 }
 
+.frame-card-active {
+  border-color: rgba(245, 106, 33, 0.28);
+  background: #fff7f0;
+}
+
 .frame-preview {
   height: 176rpx;
   border-radius: 28rpx;
@@ -225,6 +355,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.frame-material-image {
+  width: 132rpx;
+  height: 132rpx;
 }
 
 .frame-circle {
@@ -300,6 +435,14 @@
   line-height: 96rpx;
   border-radius: 28rpx;
   font-size: 30rpx;
+}
+
+.decorate-canvas {
+  position: fixed;
+  left: -2000px;
+  top: -2000px;
+  width: 1024px;
+  height: 1024px;
 }
 
 .center {

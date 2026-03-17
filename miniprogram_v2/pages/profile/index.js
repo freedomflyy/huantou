@@ -12,7 +12,7 @@ Page({
       favorites: 0,
     },
     menus: [
-      { key: "assets", glyph: "作", title: "我的作品", note: "生成记录和收藏都放在这里" },
+      { key: "assets", glyph: "作", title: "我的作品", note: "从这里进入作品集和收藏" },
       { key: "history", glyph: "史", title: "创作记录", note: "查看每一次生成过程" },
       { key: "points", glyph: "会", title: "会员中心", note: "积分、权益和套餐" },
       { key: "about", glyph: "关于", title: "关于幻头", note: "使用帮助与产品说明" },

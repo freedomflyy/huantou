@@ -1,1 +1,24 @@
-/* inherit global styles */
+.result-quad-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18rpx;
+}
+
+.result-quad-card {
+  border-radius: 30rpx;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.94);
+  border: 1px solid rgba(242, 223, 207, 0.95);
+  box-shadow: 0 16rpx 30rpx rgba(222, 136, 72, 0.1);
+}
+
+.result-quad-cover {
+  height: 240rpx;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffe8d4 0%, #ffd1b8 100%);
+}
+
+.result-quad-body {
+  padding: 16rpx;
+}

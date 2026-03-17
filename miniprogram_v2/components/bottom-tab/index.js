@@ -1,7 +1,7 @@
 const tabs = [
   { key: "home", text: "首页", glyph: "首", url: "/pages/home/index" },
   { key: "create", text: "创作", glyph: "＋", url: "/pages/create-menu/index", primary: true },
-  { key: "assets", text: "作品集", glyph: "集", url: "/pages/assets/index" },
+  { key: "square", text: "广场", glyph: "广", url: "/pages/square/index" },
   { key: "profile", text: "我的", glyph: "我", url: "/pages/profile/index" },
 ];
 

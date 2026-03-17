@@ -2,41 +2,44 @@
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="container fixed-tab-space">
-    <top-bar title="创作工坊" subtitle="挑一个入口，开始生成你的新头像" showBack="{{false}}" rightText="帮助" bind:righttap="goHelp" />
-
-    <view class="soft-card hero-card cover-sunset">
-      <view class="hero-hello">
-        <view class="hero-kicker">创作入口</view>
-        <view class="title-lg">一张照片，或者一句描述，<text class="hero-highlight">都能开始</text></view>
-        <view class="hero-subtitle">先挑一种方式，再进入具体工作台。后端接入后，当前交互会直接连上生成链路。</view>
-      </view>
+  <view class="container fixed-tab-space create-page">
+    <view class="create-topbar">
+      <view class="create-back" bindtap="onBack">←</view>
+      <view class="create-top-title">开始创作</view>
+      <view class="create-top-space"></view>
     </view>
 
-    <block wx:for="{{modes}}" wx:key="key">
-      <view class="soft-card mode-card" data-url="{{item.page}}" bindtap="onModeTap">
-        <view class="mode-cover {{item.coverClass}}">
-          <view class="mode-glyph">{{item.glyph}}</view>
-        </view>
-        <view class="mode-body">
-          <view class="title-md">{{item.title}}</view>
-          <view class="subtitle mt-12">{{item.subtitle}}</view>
-        </view>
-        <view class="mode-arrow">›</view>
-      </view>
-    </block>
-
-    <view class="soft-card">
-      <view class="section-head">
-        <view class="title-md">热门灵感</view>
-        <view class="section-more">一键带入</view>
-      </view>
-      <view class="idea-wrap">
-        <block wx:for="{{ideas}}" wx:key="*this">
-          <view class="pill pill-outline" data-idea="{{item}}" bindtap="onIdeaTap">{{item}}</view>
-        </block>
-      </view>
+    <view class="create-hero">
+      <view class="create-hero-title">释放你的想象力</view>
+      <view class="create-hero-subtitle">使用 AI 开启全新创作之旅</view>
     </view>
+
+    <view class="create-section-title">核心功能</view>
+    <view class="feature-matrix">
+      <block wx:for="{{features}}" wx:key="key">
+        <view class="feature-matrix-card" data-key="{{item.key}}" bindtap="onFeatureTap">
+          <view class="feature-matrix-icon {{item.tone}}">{{item.glyph}}</view>
+          <view class="feature-matrix-title">{{item.title}}</view>
+          <view class="feature-matrix-note">{{item.note}}</view>
+        </view>
+      </block>
+    </view>
+
+    <view class="create-inspiration-head">
+      <view class="create-section-title inspiration-title">灵感展示</view>
+      <view class="section-more" bindtap="goSquare">查看全部</view>
+    </view>
+
+    <scroll-view scroll-x class="inspiration-scroll" enable-flex="true">
+      <block wx:for="{{inspirations}}" wx:key="id">
+        <view class="inspiration-card" data-title="{{item.title}}" bindtap="onInspirationTap">
+          <view class="inspiration-cover {{item.coverClass}}">
+            <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+          </view>
+          <view class="inspiration-title-text">{{item.title}}</view>
+        </view>
+      </block>
+    </scroll-view>
 
     <bottom-tab current="create" />
   </view>

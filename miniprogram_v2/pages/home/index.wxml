@@ -2,70 +2,102 @@
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="container fixed-tab-space">
-    <view class="home-head row">
-      <view class="brand-wrap">
-        <view class="brand-mark">幻</view>
-        <view>
-          <view class="brand-title">幻头 HuanTou</view>
-          <view class="brand-subtitle">温暖生成你的下一张头像</view>
+  <view class="home-fixed-head">
+    <view class="container home-fixed-inner">
+      <view class="home-brand-row">
+        <view class="brand-wrap">
+          <view class="brand-badge">幻</view>
+          <view>
+            <view class="brand-title">幻头 <text class="brand-accent">Phantom</text></view>
+            <view class="brand-subtitle">AI 驱动，一键定制你的专属幻象头像</view>
+          </view>
+        </view>
+        <view class="head-actions">
+          <view class="head-icon-btn" bindtap="goPoints">铃</view>
+          <view class="head-icon-btn" bindtap="goSquare">搜</view>
         </view>
       </view>
-      <view class="head-action" bindtap="goAssets">集</view>
     </view>
+  </view>
 
-    <view class="soft-card hero-card cover-cream">
-      <view class="hero-hello">
-        <view class="hero-kicker">Hi，{{user.nickname}}</view>
-        <view class="title-lg">发现你的 <text class="hero-highlight">灵感瞬间</text></view>
-        <view class="hero-script">Welcome</view>
-        <view class="hero-subtitle">从一句话、一次上传，到一张适合社交主页的新头像。</view>
+  <view class="container fixed-tab-space home-body">
+    <view class="home-fixed-space"></view>
+
+    <view class="section-head home-section-head">
+      <view>
+        <view class="title-lg">风格迁移</view>
+        <view class="home-kicker">CHOOSE TEMPLATE</view>
       </view>
+      <view class="section-more" bindtap="goStyleTransfer">查看全部</view>
     </view>
 
-    <view class="soft-card">
-      <view class="quick-grid">
-        <block wx:for="{{quickActions}}" wx:key="key">
-          <view class="quick-item" data-key="{{item.key}}" bindtap="onActionTap">
-            <view class="quick-icon">{{item.glyph}}</view>
-            <view class="quick-label">{{item.label}}</view>
-            <view class="quick-desc">{{item.desc}}</view>
+    <scroll-view scroll-x class="template-scroll" enable-flex="true">
+      <block wx:for="{{styleTemplates}}" wx:key="id">
+        <view class="template-show-card" data-style="{{item.name}}" bindtap="onTemplateTap">
+          <view class="template-show-cover {{item.coverClass}}">
+            <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+            <view class="template-cover-mask"></view>
+            <view class="template-tag">{{item.badge}}</view>
           </view>
+          <view class="template-show-body">
+            <view>
+              <view class="title-md">{{item.name}}</view>
+              <view class="subtitle mt-8">{{item.desc}}</view>
+            </view>
+            <view class="template-add-btn">＋</view>
+          </view>
+        </view>
+      </block>
+    </scroll-view>
+
+    <view class="text-banner-card">
+      <view class="text-banner-copy">
+        <view class="title-lg">AI 文生图</view>
+        <view class="subtitle mt-12">输入文字描述，AI 为你构筑无限可能。用一句话生成专属幻头。</view>
+        <button class="banner-action-btn" bindtap="goTextGenerate">立即生成</button>
+      </view>
+      <view class="text-banner-icon">文</view>
+    </view>
+
+    <view class="feature-row">
+      <block wx:for="{{featureItems}}" wx:key="key">
+        <view class="feature-card" data-key="{{item.key}}" bindtap="onFeatureTap">
+          <view class="feature-icon {{item.tone}}">{{item.key==='smart-edit' ? '笔' : '景'}}</view>
+          <view>
+            <view class="feature-title">{{item.title}}</view>
+            <view class="feature-note">{{item.note}}</view>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <view class="section-head home-section-head plaza-head">
+      <view class="title-lg">广场精选</view>
+      <view class="plaza-tabs">
+        <block wx:for="{{plazaTabs}}" wx:key="*this">
+          <view class="plaza-tab {{currentPlazaTab===item ? 'plaza-tab-active' : ''}}" data-tab="{{item}}" bindtap="onPlazaTabTap">{{item}}</view>
         </block>
       </view>
     </view>
 
-    <view class="section-head">
-      <view class="title-md">每日灵感</view>
-      <view class="section-more" bindtap="goCreateMenu">去创作</view>
-    </view>
-
-    <scroll-view scroll-x class="pill-row mb-18" enable-flex="true">
-      <block wx:for="{{tags}}" wx:key="*this">
-        <view class="pill {{currentTag===item?'pill-active':''}}" data-tag="{{item}}" bindtap="onTagTap">{{item}}</view>
-      </block>
-    </scroll-view>
-
-    <view class="gallery-grid">
-      <block wx:for="{{gallery}}" wx:key="id">
-        <view class="surface-card gallery-card" data-taskid="{{item.taskId}}" bindtap="onGalleryTap">
-          <view class="gallery-cover {{item.coverClass}}">
+    <view class="plaza-grid">
+      <block wx:for="{{displayGallery}}" wx:key="id">
+        <view class="plaza-card" data-taskid="{{item.taskId}}" bindtap="onGalleryTap">
+          <view class="plaza-cover {{item.coverClass}}">
             <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
-            <view wx:if="{{item.badge}}" class="badge">{{item.badge}}</view>
           </view>
-          <view class="gallery-body">
-            <view class="title-md">{{item.title}}</view>
-            <view class="meta-row">
-              <view class="meta-author">
-                <view class="meta-dot"></view>
-                {{item.author}}
-              </view>
-              <view class="meta-like">{{item.likes}}</view>
+          <view class="plaza-body">
+            <view class="plaza-title">{{item.title}}</view>
+            <view class="plaza-author-row">
+              <view class="plaza-avatar-dot"></view>
+              <view class="plaza-author">{{item.creatorName}}</view>
             </view>
           </view>
         </view>
       </block>
     </view>
+
+    <button class="square-entry-btn" bindtap="goSquare">进入广场探索更多 ›</button>
 
     <bottom-tab current="home" />
   </view>

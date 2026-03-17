@@ -1,17 +1,17 @@
 .tab-wrap {
   position: fixed;
-  left: 24rpx;
-  right: 24rpx;
-  bottom: 24rpx;
-  border-radius: 999rpx;
-  background: rgba(255, 255, 255, 0.92);
-  border: 1px solid rgba(242, 223, 207, 0.98);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14rpx 18rpx calc(14rpx + env(safe-area-inset-bottom));
+  left: 0;
+  right: 0;
+  bottom: 0;
   z-index: 90;
-  box-shadow: 0 18rpx 34rpx rgba(225, 146, 92, 0.16);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 14rpx 20rpx calc(18rpx + env(safe-area-inset-bottom));
+  box-sizing: border-box;
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid rgba(242, 223, 207, 0.95);
+  backdrop-filter: blur(18rpx);
 }
 
 .tab-item {
@@ -19,8 +19,25 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
+  color: #a3b0c3;
+}
+
+.tab-icon-shell {
+  width: 58rpx;
+  height: 58rpx;
+  border-radius: 999rpx;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  color: #a48c7d;
+  margin-bottom: 10rpx;
+}
+
+.tab-icon-shell-primary {
+  width: 98rpx;
+  height: 98rpx;
+  margin-top: -34rpx;
+  background: rgba(245, 106, 33, 0.1);
 }
 
 .tab-icon {
@@ -30,11 +47,19 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 6rpx;
-  background: #fff6ef;
-  color: #f56a21;
-  font-size: 22rpx;
+  background: transparent;
+  color: #a3b0c3;
+  font-size: 24rpx;
   font-weight: 700;
+}
+
+.tab-icon-primary {
+  width: 82rpx;
+  height: 82rpx;
+  background: linear-gradient(135deg, #ff7a1f 0%, #f56a21 100%);
+  color: #ffffff;
+  font-size: 42rpx;
+  box-shadow: 0 16rpx 30rpx rgba(245, 106, 33, 0.26);
 }
 
 .tab-text {
@@ -42,25 +67,10 @@
   font-weight: 600;
 }
 
-.primary-tab {
-  margin-top: -42rpx;
-}
-
-.tab-icon-primary {
-  width: 94rpx;
-  height: 94rpx;
-  margin-bottom: 10rpx;
-  background: linear-gradient(135deg, #ff7a1f 0%, #f56a21 100%);
-  box-shadow: 0 18rpx 32rpx rgba(245, 106, 33, 0.28);
-  color: #ffffff;
-  border: 8rpx solid #fff6ee;
-  font-size: 40rpx;
+.tab-item.active .tab-text {
+  color: #f56a21;
 }
 
 .tab-item.active .tab-icon {
-  background: linear-gradient(135deg, #fff1e6 0%, #ffe0cd 100%);
-}
-
-.tab-item.active .tab-text {
   color: #f56a21;
 }

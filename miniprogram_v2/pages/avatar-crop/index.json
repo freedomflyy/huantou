@@ -1,6 +1,6 @@
 {
   "navigationStyle": "custom",
   "usingComponents": {
-    "bottom-tab": "/components/bottom-tab/index"
+    "top-bar": "/components/top-bar/index"
   }
 }

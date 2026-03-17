@@ -2,54 +2,151 @@
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="container">
-    <top-bar title="幻头 · AI 绘画" subtitle="一句描述，生成一张更像你的头像" backUrl="/pages/create-menu/index" rightText="灵感" bind:righttap="randomPrompt" />
+  <view class="text-nav">
+    <view class="text-nav-back" bindtap="onBack">←</view>
+    <view class="text-nav-title">AI 文生图</view>
+    <view class="text-nav-space"></view>
+  </view>
 
-    <view class="soft-card">
-      <view class="row mb-18">
-        <view class="eyebrow">随机灵感</view>
-        <view class="section-more" bindtap="randomPrompt">换一个</view>
-      </view>
-      <view class="hint-row">
-        <view class="dot-glyph">AI</view>
-        <view>{{inspirationText}}</view>
-      </view>
-
-      <view class="field-label mt-24">你的描述</view>
-      <textarea class="textarea-box" value="{{prompt}}" bindinput="onPromptInput" placeholder="输入你的创意，例如：温暖阳光下的女生头像，治愈插画风，适合作为微信头像" placeholder-style="color:#b49b8b;" />
-
-      <view class="field-label mt-24">不希望出现（可选）</view>
-      <textarea class="textarea-box" value="{{negativePrompt}}" bindinput="onNegativePromptInput" placeholder="例如：模糊、过暗、畸形、杂乱背景" placeholder-style="color:#b49b8b;" />
+  <view class="container text-generate-page">
+    <view class="text-hero">
+      <view class="text-hero-title">AI 文生图</view>
+      <view class="text-hero-subtitle">输入一句话，生成你的专属头像</view>
     </view>
 
-    <view class="soft-card">
-      <view class="field-label">推荐风格</view>
-      <view class="idea-wrap">
-        <block wx:for="{{ideas}}" wx:key="*this">
-          <view class="pill {{selectedIdea===item?'pill-active':''}}" data-idea="{{item}}" bindtap="onIdeaTap">{{item}}</view>
+    <view class="soft-card prompt-card">
+      <view class="prompt-head">
+        <view class="prompt-icon">词</view>
+        <view class="prompt-title">提示词</view>
+      </view>
+      <textarea
+        class="textarea-box prompt-textarea"
+        value="{{prompt}}"
+        bindinput="onPromptInput"
+        placeholder="输入描述，例如：金发蓝眼，动漫风格..."
+        placeholder-style="color:#a4b1c9;"
+      />
+      <view class="prompt-chip-wrap">
+        <block wx:for="{{promptTags}}" wx:key="id">
+          <view class="prompt-chip" data-id="{{item.id}}" bindtap="onPromptTagTap">{{item.label}}</view>
         </block>
       </view>
     </view>
 
-    <view class="soft-card">
-      <view class="field-label">生成比例</view>
-      <view class="ratio-grid">
-        <block wx:for="{{ratios}}" wx:key="value">
-          <view class="ratio-card {{selectedRatio===item.value?'active':''}}" data-ratio="{{item.value}}" bindtap="onRatioTap">
-            <view class="ratio-figure">{{item.value}}</view>
-            <view class="ratio-note">{{item.label}}</view>
+    <view class="text-section-head">
+      <view class="text-section-title">
+        <view class="section-icon">绘</view>
+        <view>推荐风格</view>
+      </view>
+    </view>
+
+    <scroll-view scroll-x class="style-scroll" enable-flex="true">
+      <block wx:for="{{styleOptions}}" wx:key="id">
+        <view class="style-card-lite {{selectedStyle===item.name ? 'style-card-lite-active' : ''}}" data-style="{{item.name}}" bindtap="onStyleTap">
+          <view class="style-card-media {{!item.imageUrl ? item.coverClass : ''}}">
+            <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+            <view wx:if="{{item.isNone}}" class="style-none-mark">无</view>
           </view>
-        </block>
+          <view class="style-card-name">{{item.name}}</view>
+        </view>
+      </block>
+    </scroll-view>
+
+    <view class="soft-card collapse-card">
+      <view class="collapse-head" bindtap="toggleCharacterPanel">
+        <view class="collapse-title-wrap">
+          <view class="collapse-icon">人</view>
+          <view class="collapse-title">人物设置（默认）</view>
+        </view>
+        <view class="collapse-arrow {{characterExpanded ? 'collapse-arrow-open' : ''}}">v</view>
       </view>
-      <view class="field-label mt-24">候选张数</view>
-      <view class="idea-wrap">
-        <block wx:for="{{outputCountOptions}}" wx:key="value">
-          <view class="pill {{selectedOutputCount===item.value?'pill-active':''}}" data-count="{{item.value}}" bindtap="onOutputCountTap">{{item.label}}</view>
-        </block>
+
+      <view wx:if="{{characterExpanded}}" class="collapse-body">
+        <view class="field-label">性别倾向</view>
+        <view class="segment-wrap">
+          <block wx:for="{{genderOptions}}" wx:key="*this">
+            <view class="segment-pill {{selectedGender===item ? 'segment-pill-active' : ''}}" data-gender="{{item}}" bindtap="onGenderTap">{{item}}</view>
+          </block>
+        </view>
+
+        <view class="field-label mt-20">发色倾向</view>
+        <view class="hair-row">
+          <block wx:for="{{hairColors}}" wx:key="value">
+            <view class="hair-dot {{selectedHairColor===item.value ? 'hair-dot-active' : ''}}" data-color="{{item.value}}" bindtap="onHairColorTap">
+              <view class="hair-dot-inner" style="background: {{item.color}};"></view>
+            </view>
+          </block>
+        </view>
       </view>
-      <view class="subtitle mt-20">预计消耗 {{rules.txt2img_cost}} 积分，本次会返回 {{selectedOutputCount}} 张候选图。</view>
-      <primary-button text="立即生成" loading="{{submitting}}" bind:tap="onCreateTask" />
-      <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
     </view>
+
+    <view class="soft-card collapse-card">
+      <view class="collapse-head" bindtap="toggleAdvancedPanel">
+        <view class="collapse-title-wrap">
+          <view class="collapse-icon">设</view>
+          <view class="collapse-title">高级设置</view>
+        </view>
+        <view class="collapse-arrow {{advancedExpanded ? 'collapse-arrow-open' : ''}}">v</view>
+      </view>
+
+      <view wx:if="{{advancedExpanded}}" class="collapse-body">
+        <view class="setting-row">
+          <view class="setting-label">尺寸比例</view>
+          <view class="setting-value">1:1（固定）</view>
+        </view>
+
+        <view class="field-label mt-20">候选张数</view>
+        <view class="idea-wrap">
+          <block wx:for="{{outputCountOptions}}" wx:key="value">
+            <view class="pill {{selectedOutputCount===item.value ? 'pill-active' : ''}}" data-count="{{item.value}}" bindtap="onOutputCountTap">{{item.label}}</view>
+          </block>
+        </view>
+
+        <view class="field-label mt-20">不希望出现（可选）</view>
+        <textarea
+          class="textarea-box advanced-textarea"
+          value="{{negativePrompt}}"
+          bindinput="onNegativePromptInput"
+          placeholder="例如：模糊、过暗、畸形、杂乱背景"
+          placeholder-style="color:#b49b8b;"
+        />
+      </view>
+    </view>
+
+    <view class="history-head">
+      <view class="text-section-title">
+        <view class="section-icon">星</view>
+        <view>生成历史</view>
+      </view>
+      <view class="section-more" bindtap="goAllHistory">全部历史</view>
+    </view>
+
+    <view wx:if="{{recentHistory.length}}" class="history-grid">
+      <block wx:for="{{recentHistory}}" wx:key="id">
+        <view class="history-card {{selectedHistoryId===item.id ? 'history-card-active' : ''}}" data-id="{{item.id}}" bindtap="onHistoryTap">
+          <view class="history-card-media">
+            <image class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+            <view wx:if="{{selectedHistoryId===item.id}}" class="history-selected-mark">已选</view>
+          </view>
+        </view>
+      </block>
+    </view>
+
+    <view wx:else class="soft-card history-empty">
+      <view class="title-md">还没有文生图头像</view>
+      <view class="subtitle mt-12">先输入一句描述，生成你的第一组候选头像。</view>
+    </view>
+
+    <view wx:if="{{recentHistory.length}}" class="history-action-row">
+      <button class="history-action history-action-primary" bindtap="onSaveSelected">保存选中</button>
+      <button class="history-action history-action-ghost" bindtap="onDeepEdit">深度精修</button>
+    </view>
+
+    <view wx:if="{{errorMsg}}" class="subtitle mt-20 page-error">{{errorMsg}}</view>
+  </view>
+
+  <view class="generate-bar">
+    <view class="generate-tip">单次生成消耗 {{rules.txt2img_cost}} 积分 (剩余 {{pointsBalance}})</view>
+    <button class="generate-btn" loading="{{submitting}}" bindtap="onCreateTask">立即生成头像</button>
   </view>
 </view>

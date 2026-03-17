@@ -1,67 +1,101 @@
-<view class="page-shell">
+<view class="page-shell style-transfer-page">
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="container">
-    <top-bar title="幻头风格迁移" subtitle="上传照片后，挑一个你喜欢的风格" backUrl="/pages/create-menu/index" />
-
-    <view class="soft-card">
-      <view class="upload-zone">
-        <view class="upload-icon">传</view>
-        <view class="title-md">上传主图</view>
-        <view class="subtitle mt-12">支持相册和拍照，先放一张人物照片进来。</view>
-        <button class="btn btn-primary mt-24" bindtap="uploadInput">选择照片</button>
-      </view>
-      <view wx:if="{{inputImageUrl}}" class="preview-frame mt-24">
-        <image class="preview-image" mode="aspectFill" src="{{inputImageUrl}}" />
-      </view>
+  <view class="style-header">
+    <view class="style-back" bindtap="onBack">←</view>
+    <view class="style-header-copy">
+      <view class="style-header-title">风格迁移</view>
+      <view class="style-header-subtitle">上传照片，选择风格，一键生成头像</view>
     </view>
+  </view>
 
-    <view class="soft-card">
-      <view class="section-head">
-        <view class="title-md">参考图</view>
-        <view class="section-more" bindtap="uploadReference">再传一张</view>
-      </view>
-      <view wx:if="{{referenceImageUrl}}" class="preview-frame">
-        <image class="preview-image" mode="aspectFill" src="{{referenceImageUrl}}" />
-      </view>
-      <view wx:else class="hint-row">
-        <view class="dot-glyph">荐</view>
-        <view>当前真实后端链路会一起使用参考图，请至少上传一张风格图。</view>
-      </view>
-    </view>
-
-    <view class="soft-card">
-      <view class="section-head">
-        <view class="title-md">选择艺术风格</view>
-        <view class="section-more">{{selectedStyle}}</view>
-      </view>
-      <scroll-view scroll-x class="style-rail" enable-flex="true">
-        <block wx:for="{{styleCards}}" wx:key="id">
-          <view class="style-card" data-style="{{item.name}}" bindtap="onStyleTap">
-            <view class="style-cover {{item.coverClass}}">
-              <view wx:if="{{item.hot}}" class="badge badge-hot">HOT</view>
-              <view wx:if="{{selectedStyle===item.name}}" class="badge">{{item.name}}</view>
-            </view>
-            <view class="style-title">{{item.name}}</view>
-            <view class="style-desc">{{item.desc}}</view>
+  <scroll-view scroll-y class="style-scroll-shell">
+    <view class="style-body">
+      <view class="upload-card">
+        <view class="portrait-stage" bindtap="onPortraitTap">
+          <image wx:if="{{inputImageUrl}}" class="portrait-image" mode="aspectFill" src="{{inputImageUrl}}" />
+          <view wx:else class="portrait-empty">
+            <view class="portrait-empty-badge">传</view>
+            <view class="portrait-empty-title">上传并裁剪头像</view>
+            <view class="portrait-empty-copy">先裁成正方形头像，再开始风格迁移</view>
           </view>
-        </block>
-      </scroll-view>
-    </view>
-
-    <view class="soft-card">
-      <view class="field-label">迁移说明</view>
-      <textarea class="textarea-box" value="{{prompt}}" bindinput="onPromptInput" placeholder="例如：保留人物神态和五官，把画面换成童话油画质感，整体更温暖" placeholder-style="color:#b49b8b;" />
-      <view class="field-label mt-24">候选张数</view>
-      <view class="idea-wrap">
-        <block wx:for="{{outputCountOptions}}" wx:key="value">
-          <view class="pill {{selectedOutputCount===item.value?'pill-active':''}}" data-count="{{item.value}}" bindtap="onOutputCountTap">{{item.label}}</view>
-        </block>
+        </view>
+        <view class="upload-actions">
+          <button class="upload-action" bindtap="uploadInput">重新上传</button>
+          <button class="upload-action" bindtap="recropCurrent">裁剪图片</button>
+        </view>
       </view>
-      <view class="subtitle mt-20">预计消耗 {{rules.style_transfer_cost}} 积分，本次会返回 {{selectedOutputCount}} 张风格候选图。</view>
-      <primary-button text="开始转绘" loading="{{submitting}}" bind:tap="onCreateTask" />
-      <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
+
+      <view class="section-row">
+        <view class="section-title">选择风格</view>
+        <view class="section-badge">更多风格持续更新</view>
+      </view>
+
+      <scroll-view scroll-x class="style-card-scroll" enable-flex="true">
+        <view class="style-card-row">
+          <block wx:for="{{styleCards}}" wx:key="id">
+            <view class="style-pick-card" data-style="{{item.name}}" bindtap="onStyleTap">
+              <view class="style-pick-cover {{selectedStyle===item.name ? 'style-pick-cover-active' : ''}}">
+                <image wx:if="{{item.imageUrl}}" class="style-pick-image" mode="aspectFill" src="{{item.imageUrl}}" />
+                <view wx:else class="style-pick-fallback {{item.coverClass}}"></view>
+                <view wx:if="{{selectedStyle===item.name}}" class="style-pick-check">✓</view>
+              </view>
+              <view class="style-pick-name">{{item.name}}</view>
+              <view class="style-pick-desc">{{item.desc}}</view>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+
+      <view class="setting-card">
+        <view class="setting-block">
+          <view class="setting-head">
+            <view class="setting-label">风格强度</view>
+            <view class="setting-value">{{styleStrength}}%</view>
+          </view>
+          <slider
+            class="style-slider"
+            min="35"
+            max="100"
+            step="1"
+            value="{{styleStrength}}"
+            activeColor="#ec5b13"
+            backgroundColor="#f5e7de"
+            block-color="#ec5b13"
+            block-size="20"
+            bindchange="onStrengthChange"
+          />
+        </view>
+
+        <view class="setting-divider"></view>
+
+        <view class="toggle-row">
+          <view>
+            <view class="setting-label">保留面部特征</view>
+            <view class="toggle-copy">使生成的头像更像本人</view>
+          </view>
+          <switch
+            checked="{{preserveFace}}"
+            color="#ec5b13"
+            bindchange="onPreserveFaceChange"
+          />
+        </view>
+      </view>
+
+      <view class="queue-note">
+        <view class="queue-note-dot">i</view>
+        <view class="queue-note-copy">生成任务为异步处理，预计需要 30 秒。完成后您可以在“我的作品”或“任务列表”中查看并下载结果。</view>
+      </view>
+
+      <view wx:if="{{errorMsg}}" class="queue-error">{{errorMsg}}</view>
     </view>
+  </scroll-view>
+
+  <view class="style-footer">
+    <button class="queue-button" loading="{{submitting}}" bindtap="onCreateTask">
+      <view class="queue-button-title">加入生成队列</view>
+      <view class="queue-button-subtitle">消耗 {{rules.style_transfer_cost}} 灵感点</view>
+    </button>
   </view>
 </view>

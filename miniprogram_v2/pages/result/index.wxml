@@ -3,9 +3,31 @@
   <view class="float-glow glow-cream"></view>
 
   <view class="container">
-    <top-bar title="作品详情" subtitle="已为你挑出最适合作为头像的版本" backUrl="/pages/assets/index" />
+    <top-bar title="作品详情" subtitle="四宫格查看这次生成的头像候选图" backUrl="/pages/assets/index" />
 
-    <view wx:if="{{task}}" class="soft-card">
+    <view wx:if="{{outputs.length}}" class="soft-card">
+      <view class="section-head">
+        <view class="title-md">候选头像</view>
+        <view class="section-more">{{outputs.length}} 张</view>
+      </view>
+      <view class="result-quad-grid">
+        <block wx:for="{{outputs}}" wx:key="id">
+          <view class="result-quad-card">
+            <view class="result-quad-cover {{item.coverClass}}" bindtap="previewImage" data-url="{{item.fileUrl}}">
+              <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
+              <view wx:if="{{item.badge}}" class="badge">{{item.badge}}</view>
+            </view>
+            <view class="result-quad-body">
+              <view class="title-md">{{item.title}}</view>
+              <view class="subtitle mt-8">{{item.subtitle}}</view>
+              <button class="btn btn-ghost mt-16" data-id="{{item.id}}" data-favorited="{{item.isFavorited}}" bindtap="onFavoriteTap">{{item.isFavorited ? '取消收藏' : '收藏这一版'}}</button>
+            </view>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view wx:elif="{{task}}" class="soft-card">
       <view class="result-cover {{task.coverClass}}">
         <image wx:if="{{task.displayImageUrl}}" class="preview-image" mode="aspectFill" src="{{task.displayImageUrl}}" bindtap="previewImage" data-url="{{task.displayImageUrl}}" />
         <view class="result-overlay">
@@ -32,26 +54,6 @@
       <view class="subtitle mt-20">{{task.prompt}}</view>
       <view class="subtitle mt-16">创建时间 {{task.createdAtLabel}}<text wx:if="{{task.finishedAtLabel}}"> · 完成 {{task.finishedAtLabel}}</text></view>
       <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
-    </view>
-
-    <view wx:if="{{outputs.length}}" class="soft-card">
-      <view class="section-head">
-        <view class="title-md">候选结果</view>
-        <view class="section-more">{{outputs.length}} 张</view>
-      </view>
-      <view class="mini-grid">
-        <block wx:for="{{outputs}}" wx:key="id">
-          <view class="surface-card mini-card">
-            <view class="mini-cover {{item.coverClass}}" bindtap="previewImage" data-url="{{item.fileUrl}}">
-              <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
-              <view wx:if="{{item.badge}}" class="badge">{{item.badge}}</view>
-            </view>
-            <view class="title-md mt-16">{{item.title}}</view>
-            <view class="subtitle mt-8">{{item.subtitle}}</view>
-            <button class="btn btn-ghost mt-16" data-id="{{item.id}}" data-favorited="{{item.isFavorited}}" bindtap="onFavoriteTap">{{item.isFavorited ? '取消收藏' : '收藏这一版'}}</button>
-          </view>
-        </block>
-      </view>
     </view>
 
     <view wx:if="{{task && !outputs.length}}" class="soft-card empty-state">

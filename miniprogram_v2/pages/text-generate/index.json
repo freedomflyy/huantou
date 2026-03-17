@@ -1,7 +1,3 @@
 {
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "top-bar": "/components/top-bar/index",
-    "primary-button": "/components/primary-button/index"
-  }
+  "navigationStyle": "custom"
 }

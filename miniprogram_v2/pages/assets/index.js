@@ -6,6 +6,7 @@ Page({
   data: {
     selectMode: false,
     target: "",
+    currentTab: "mine",
     myAssets: [],
     favoriteAssets: [],
     taskMap: {},
@@ -28,6 +29,12 @@ Page({
   findCard(section, id) {
     const list = section === "favorites" ? this.data.favoriteAssets : this.data.myAssets;
     return list.find((item) => item.id === id) || null;
+  },
+
+  onTabTap(e) {
+    const tab = e.currentTarget.dataset.tab;
+    if (!tab) return;
+    this.setData({ currentTab: tab });
   },
 
   async loadAssets() {

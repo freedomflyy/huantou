@@ -6,20 +6,16 @@
     <top-bar title="{{selectMode ? '选择作品' : '作品集'}}" subtitle="{{selectMode ? '选一张已经上传或生成过的图片继续使用' : '把喜欢的版本沉淀下来，慢慢挑'}}" showBack="{{selectMode}}" rightText="创作" bind:righttap="goCreate" />
 
     <view class="soft-card">
-      <view class="row">
-        <view>
-          <view class="title-md">我的作品与收藏</view>
-          <view class="subtitle mt-8">这里已经开始读取真实作品数据，后面我们再继续补筛选、下载和二次编辑。</view>
-        </view>
-      </view>
-      <view class="section-chip-row mt-20">
-        <view class="pill pill-active">我的作品 {{myAssets.length}}</view>
-        <view class="pill pill-outline">收藏 {{favoriteAssets.length}}</view>
+      <view class="title-md">我的作品库</view>
+      <view class="subtitle mt-8">作品和收藏改成并列切换，方便更聚焦地查看你的头像版本。</view>
+      <view class="assets-tab-row mt-24">
+        <view class="assets-tab {{currentTab==='mine' ? 'assets-tab-active' : ''}}" data-tab="mine" bindtap="onTabTap">我的作品 {{myAssets.length}}</view>
+        <view class="assets-tab {{currentTab==='favorites' ? 'assets-tab-active' : ''}}" data-tab="favorites" bindtap="onTabTap">收藏 {{favoriteAssets.length}}</view>
       </view>
       <view wx:if="{{errorMsg}}" class="subtitle mt-16">{{errorMsg}}</view>
     </view>
 
-    <view class="section-block">
+    <view wx:if="{{currentTab==='mine'}}" class="section-block">
       <view class="section-head">
         <view class="title-md">我的作品</view>
         <view class="section-more">{{myAssets.length}} 张</view>
@@ -52,7 +48,7 @@
       </view>
     </view>
 
-    <view class="section-block">
+    <view wx:if="{{currentTab==='favorites'}}" class="section-block">
       <view class="section-head">
         <view class="title-md">收藏</view>
         <view class="section-more">{{favoriteAssets.length}} 张</view>
@@ -85,6 +81,6 @@
       </view>
     </view>
 
-    <bottom-tab wx:if="{{!selectMode}}" current="assets" />
+    <bottom-tab wx:if="{{!selectMode}}" current="profile" />
   </view>
 </view>

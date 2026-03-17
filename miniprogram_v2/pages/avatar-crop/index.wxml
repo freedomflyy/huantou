@@ -1,0 +1,73 @@
+<view class="page-shell">
+  <view class="float-glow glow-peach"></view>
+  <view class="float-glow glow-cream"></view>
+
+  <view class="container crop-page">
+    <top-bar title="九宫格裁剪" subtitle="移动和缩放裁剪框，让头像更居中" />
+
+    <view class="soft-card">
+      <view class="crop-stage">
+        <view class="crop-area" style="width: {{stageSize}}px; height: {{stageSize}}px;">
+          <image
+            wx:if="{{sourceFilePath}}"
+            class="crop-stage-image"
+            mode="aspectFill"
+            src="{{sourceFilePath}}"
+            style="left: {{imageLeft}}px; top: {{imageTop}}px; width: {{displayWidth}}px; height: {{displayHeight}}px;"
+          />
+
+          <view
+            wx:if="{{ready}}"
+            class="crop-selection"
+            style="left: {{cropX}}px; top: {{cropY}}px; width: {{cropSize}}px; height: {{cropSize}}px;"
+            catchtouchstart="onCropTouchStart"
+            catchtouchmove="onTouchMove"
+            catchtouchend="onTouchEnd"
+            catchtouchcancel="onTouchEnd"
+          >
+            <view class="crop-grid-line v-line line-1"></view>
+            <view class="crop-grid-line v-line line-2"></view>
+            <view class="crop-grid-line h-line line-1"></view>
+            <view class="crop-grid-line h-line line-2"></view>
+
+            <view class="crop-corner tl"></view>
+            <view class="crop-corner tr"></view>
+            <view class="crop-corner bl"></view>
+            <view class="crop-corner br"></view>
+
+            <view
+              class="crop-resize-handle"
+              catchtouchstart="onResizeTouchStart"
+              catchtouchmove="onTouchMove"
+              catchtouchend="onTouchEnd"
+              catchtouchcancel="onTouchEnd"
+            ></view>
+          </view>
+        </view>
+      </view>
+
+      <view class="crop-caption">
+        <view class="title-md">最终导出裁剪框内区域</view>
+        <view class="subtitle mt-10">图片保持稳定显示，拖动裁剪框调整位置，拖右下角控制点缩放范围。</view>
+      </view>
+    </view>
+
+    <view class="soft-card">
+      <view class="section-head">
+        <view class="title-md">裁剪范围</view>
+        <view class="section-more">{{cropSizeLabel}}</view>
+      </view>
+      <view class="hint-row">
+        <view class="dot-glyph">裁</view>
+        <view>裁剪框始终保持 1:1 比例，操作方式更接近手机相册裁剪。</view>
+      </view>
+    </view>
+
+    <view class="action-row">
+      <button class="btn btn-ghost" bindtap="onReset">重置</button>
+      <button class="btn btn-primary" loading="{{processing}}" bindtap="onConfirm">确认裁剪</button>
+    </view>
+  </view>
+
+  <canvas canvas-id="cropCanvas" class="crop-canvas"></canvas>
+</view>

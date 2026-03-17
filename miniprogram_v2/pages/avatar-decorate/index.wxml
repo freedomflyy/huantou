@@ -6,18 +6,81 @@
     <top-bar title="头像装饰" subtitle="给你的头像加贴纸、文字或边框" />
 
     <view class="decorate-hero soft-card">
-      <view class="preview-wrap" bindtap="previewImage">
+      <view class="preview-wrap">
         <view class="preview-ring"></view>
         <view class="preview-avatar">
-          <image wx:if="{{imageUrl}}" class="preview-image" mode="aspectFill" src="{{imageUrl}}" />
-          <view wx:else class="avatar-placeholder">
-            <view class="placeholder-badge">待补</view>
+          <image wx:if="{{imageUrl}}" class="preview-image" mode="aspectFill" src="{{imageUrl}}" bindtap="previewImage" />
+          <view wx:else class="avatar-placeholder avatar-placeholder-upload" bindtap="chooseAvatarImage">
+            <view class="placeholder-icon">传</view>
+            <view class="placeholder-title">上传头像开始装饰</view>
+            <view class="placeholder-copy">点击这里上传一张头像，再添加贴纸、文字或边框</view>
+          </view>
+
+          <movable-area
+            wx:if="{{imageUrl}}"
+            class="sticker-area"
+            style="width: {{previewSize}}px; height: {{previewSize}}px;"
+          >
+            <block wx:for="{{placedStickers}}" wx:key="instanceId">
+              <movable-view
+                class="placed-sticker {{selectedStickerId===item.instanceId ? 'placed-sticker-active' : ''}}"
+                style="width: {{item.size}}px; height: {{item.size}}px;"
+                x="{{item.x}}"
+                y="{{item.y}}"
+                direction="all"
+                out-of-bounds="{{false}}"
+                scale="{{true}}"
+                scale-min="0.6"
+                scale-max="2.4"
+                scale-value="{{item.scale}}"
+                data-id="{{item.instanceId}}"
+                bindtap="onStickerTap"
+                bindchange="onStickerChange"
+                bindscale="onStickerScale"
+              >
+                <image class="preview-image" mode="aspectFit" src="{{item.fileUrl}}" />
+                <view
+                  wx:if="{{selectedStickerId===item.instanceId}}"
+                  class="placed-remove"
+                  data-id="{{item.instanceId}}"
+                  catchtap="onRemoveSticker"
+                >
+                  ×
+                </view>
+              </movable-view>
+            </block>
+          </movable-area>
+
+          <movable-area
+            wx:if="{{textContent && imageUrl}}"
+            class="text-area"
+            style="width: {{previewSize}}px; height: {{previewSize}}px;"
+          >
+            <movable-view
+              class="text-layer"
+              style="width: {{textBoxWidth}}px; height: {{textBoxHeight}}px;"
+              x="{{textX}}"
+              y="{{textY}}"
+              direction="all"
+              out-of-bounds="{{false}}"
+              bindchange="onTextLayerChange"
+            >
+              <view class="preview-text" style="color: {{activeTextColorValue}};">{{textContent}}</view>
+            </movable-view>
+          </movable-area>
+          <view wx:if="{{selectedFrameUrl}}" class="preview-frame-shell">
+            <image class="preview-frame-overlay" mode="aspectFit" src="{{selectedFrameUrl}}" />
           </view>
         </view>
-        <view class="tool-badge">饰</view>
+        <view class="tool-badge" bindtap="chooseAvatarImage">{{imageUrl ? '换' : '传'}}</view>
       </view>
+
       <view class="title-lg mt-32 center">自定义你的头像</view>
-      <view class="subtitle center mt-12">为你的 AI 头像添加贴纸、文字或边框</view>
+      <view class="subtitle center mt-12">{{statusText}}</view>
+
+      <view wx:if="{{selectedStickerId}}" class="decorate-inline-actions">
+        <button class="btn btn-soft" bindtap="onRemoveSticker">删除当前贴纸</button>
+      </view>
     </view>
 
     <view class="decorate-tabs">
@@ -33,12 +96,17 @@
       <view class="soft-card">
         <view class="section-head">
           <view class="title-md">最近使用</view>
-          <view class="section-more">占位</view>
+          <view class="section-more">点击添加</view>
         </view>
         <view class="decorate-grid">
           <block wx:for="{{recentStickers}}" wx:key="id">
-            <view class="decorate-tile recent-tile" bindtap="onPlaceholderTap">
-              <view class="tile-mark">贴</view>
+            <view
+              class="decorate-tile recent-tile {{lastStickerMaterialId===item.id ? 'decorate-tile-active' : ''}}"
+              data-id="{{item.id}}"
+              bindtap="onStickerTileTap"
+            >
+              <image wx:if="{{item.fileUrl}}" class="material-tile-image" mode="aspectFit" src="{{item.fileUrl}}" />
+              <view wx:else class="tile-mark">贴</view>
             </view>
           </block>
         </view>
@@ -47,12 +115,17 @@
       <view class="soft-card">
         <view class="section-head">
           <view class="title-md">全部贴纸</view>
-          <view class="section-more">{{activeCategory}}</view>
+          <view class="section-more">可拖拽调整</view>
         </view>
         <view class="decorate-grid">
           <block wx:for="{{stickerItems}}" wx:key="id">
-            <view class="decorate-tile sticker-tile" bindtap="onPlaceholderTap">
-              <view class="tile-empty"></view>
+            <view
+              class="decorate-tile sticker-tile {{lastStickerMaterialId===item.id ? 'decorate-tile-active' : ''}}"
+              data-id="{{item.id}}"
+              bindtap="onStickerTileTap"
+            >
+              <image wx:if="{{item.fileUrl}}" class="material-tile-image" mode="aspectFit" src="{{item.fileUrl}}" />
+              <view wx:else class="tile-empty"></view>
               <view class="tile-label">{{item.title}}</view>
             </view>
           </block>
@@ -63,17 +136,30 @@
     <view wx:if="{{activeTab==='text'}}" class="decorate-body">
       <view class="soft-card">
         <view class="section-head">
-          <view class="title-md">全部字体</view>
-          <view class="section-more">素材待补</view>
+          <view class="title-md">默认文字样式</view>
+          <view class="section-more">单字体</view>
         </view>
-        <view class="decorate-list">
-          <block wx:for="{{fontItems}}" wx:key="id">
-            <view class="decorate-row" bindtap="onPlaceholderTap">
-              <view class="font-sample">Aa</view>
-              <view>
-                <view class="title-md">{{item.title}}</view>
-                <view class="subtitle mt-8">字体素材准备中，后续会替换为真实字形效果</view>
-              </view>
+        <input
+          class="input-box"
+          value="{{textContent}}"
+          bindinput="onTextInput"
+          placeholder="输入要展示在头像上的文字"
+          placeholder-style="color:#b49b8b;"
+        />
+
+        <view class="section-head mt-24">
+          <view class="title-md">文字颜色</view>
+          <view class="section-more">{{activeTextColor}}</view>
+        </view>
+        <view class="color-chip-row">
+          <block wx:for="{{textColorOptions}}" wx:key="label">
+            <view
+              class="color-chip {{activeTextColor===item.label ? 'color-chip-active' : ''}}"
+              data-label="{{item.label}}"
+              data-value="{{item.value}}"
+              bindtap="onTextColorTap"
+            >
+              {{item.label}}
             </view>
           </block>
         </view>
@@ -84,13 +170,18 @@
       <view class="soft-card">
         <view class="section-head">
           <view class="title-md">全部边框</view>
-          <view class="section-more">素材待补</view>
+          <view class="section-more">点击切换</view>
         </view>
         <view class="frame-grid">
           <block wx:for="{{frameItems}}" wx:key="id">
-            <view class="frame-card" bindtap="onPlaceholderTap">
+            <view
+              class="frame-card {{selectedFrameId===item.id ? 'frame-card-active' : ''}}"
+              data-id="{{item.id}}"
+              bindtap="onFrameTap"
+            >
               <view class="frame-preview">
-                <view class="frame-circle"></view>
+                <image wx:if="{{item.fileUrl}}" class="frame-material-image" mode="aspectFit" src="{{item.fileUrl}}" />
+                <view wx:else class="frame-circle"></view>
               </view>
               <view class="subtitle mt-12 center">{{item.title}}</view>
             </view>
@@ -111,7 +202,9 @@
 
     <view class="decorate-actions">
       <button class="btn btn-ghost decorate-reset" bindtap="onResetTap">重置</button>
-      <button class="btn btn-primary decorate-save" bindtap="onSaveTap">保存并导出</button>
+      <button class="btn btn-primary decorate-save" loading="{{exporting}}" bindtap="onSaveTap">保存并导出</button>
     </view>
   </view>
+
+  <canvas canvas-id="decorateCanvas" class="decorate-canvas"></canvas>
 </view>
