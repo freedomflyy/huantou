@@ -184,6 +184,34 @@ function toAssetCardViewModel(asset, taskMap = {}) {
     isFavorite: !!asset.is_favorited,
     isFavorited: !!asset.is_favorited,
     createdAtLabel: formatDateLabel(asset.created_at),
+    publishedAt: asset.created_at || "",
+    creatorName: "",
+    styleName,
+  };
+}
+
+function toShowcaseCardViewModel(item) {
+  const styleName = item.style_name || item.badge || item.subtitle || "";
+  return {
+    id: item.id,
+    assetId: "",
+    taskId: "",
+    sourceTaskId: "",
+    title: item.title || styleName || "官方精选",
+    subtitle: item.subtitle || styleName,
+    author: "官方精选",
+    likes: "",
+    coverClass: pickCoverClass(`${item.id}-${styleName}`),
+    imageUrl: item.thumbnail_url || item.file_url,
+    fileUrl: item.file_url,
+    badge: item.badge || styleName,
+    isFavorite: false,
+    isFavorited: false,
+    createdAtLabel: "",
+    publishedAt: item.published_at || "",
+    creatorName: item.creator_name || "幻头官方",
+    styleName,
+    isOfficial: true,
   };
 }
 
@@ -200,4 +228,5 @@ module.exports = {
   toAssetViewModel,
   toTaskCardViewModel,
   toAssetCardViewModel,
+  toShowcaseCardViewModel,
 };

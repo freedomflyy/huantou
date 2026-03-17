@@ -1,8 +1,9 @@
 const { ensureLogin } = require("../../utils/guard");
 const { get } = require("../../utils/request");
-const { toAssetCardViewModel } = require("../../utils/view-models");
+const { toAssetCardViewModel, toShowcaseCardViewModel } = require("../../utils/view-models");
 const { getShowcaseFallback } = require("../../utils/avatar-studio");
 const { getUiMetrics } = require("../../utils/ui-metrics");
+const { orderShowcaseItems } = require("../../utils/showcase");
 
 const PLAZA_TABS = ["热门", "最新"];
 const FALLBACK_CREATORS = ["用户9527", "AvatarMaster", "桃桃同学", "暖光练习生"];
@@ -45,7 +46,7 @@ Page({
   },
 
   setDisplayGallery(tab = this.data.currentPlazaTab, gallery = this.data.gallery) {
-    const list = tab === "最新" ? gallery.slice().reverse() : gallery.slice();
+    const list = orderShowcaseItems(gallery, tab);
     this.setData({
       currentPlazaTab: tab,
       displayGallery: list,
@@ -54,22 +55,32 @@ Page({
 
   async loadData() {
     try {
-      const [assetsRes, tasksRes] = await Promise.all([
-        get("/assets?limit=24"),
-        get("/tasks?limit=60"),
-      ]);
-      const taskMap = {};
-      (tasksRes.items || []).forEach((task) => {
-        taskMap[task.id] = task;
-      });
-      const gallery = decorateGallery((assetsRes.items || []).map((item) => toAssetCardViewModel(item, taskMap)));
+      const showcaseRes = await get("/showcase?limit=24");
+      const gallery = decorateGallery((showcaseRes.items || []).map(toShowcaseCardViewModel));
       if (gallery.length) {
         this.setData({ gallery });
         this.setDisplayGallery(this.data.currentPlazaTab, gallery);
         return;
       }
     } catch (err) {
-      // Fall through to curated data.
+      try {
+        const [assetsRes, tasksRes] = await Promise.all([
+          get("/assets?limit=24"),
+          get("/tasks?limit=60"),
+        ]);
+        const taskMap = {};
+        (tasksRes.items || []).forEach((task) => {
+          taskMap[task.id] = task;
+        });
+        const gallery = decorateGallery((assetsRes.items || []).map((item) => toAssetCardViewModel(item, taskMap)));
+        if (gallery.length) {
+          this.setData({ gallery });
+          this.setDisplayGallery(this.data.currentPlazaTab, gallery);
+          return;
+        }
+      } catch (nestedErr) {
+        // Fall through to curated data.
+      }
     }
 
     const fallbackGallery = getFallbackGallery();
@@ -85,8 +96,13 @@ Page({
 
   onGalleryTap(e) {
     const taskId = e.currentTarget.dataset.taskid;
+    const style = e.currentTarget.dataset.style || "";
     if (taskId) {
       wx.navigateTo({ url: `/pages/result/index?taskId=${encodeURIComponent(taskId)}` });
+      return;
+    }
+    if (style) {
+      wx.navigateTo({ url: `/pages/image-reference/index?style=${encodeURIComponent(style)}` });
       return;
     }
     wx.navigateTo({ url: "/pages/image-reference/index" });

@@ -1,10 +1,11 @@
 const { ensureLogin } = require("../../utils/guard");
 const { get } = require("../../utils/request");
 const { getUser } = require("../../utils/session");
-const { toAssetCardViewModel } = require("../../utils/view-models");
+const { toAssetCardViewModel, toShowcaseCardViewModel } = require("../../utils/view-models");
 const { getStyleTemplates, getShowcaseFallback } = require("../../utils/avatar-studio");
 const { getUiMetrics } = require("../../utils/ui-metrics");
 const { fetchPublicAssets } = require("../../utils/public-assets");
+const { orderShowcaseItems } = require("../../utils/showcase");
 const QUICK_ACTIONS = [
   { key: "text-generate", title: "AI 文生图", glyph: "文" },
   { key: "smart-edit", title: "智能修改", glyph: "修" },
@@ -113,7 +114,7 @@ Page({
   },
 
   setDisplayGallery(tab = this.data.currentPlazaTab, gallery = this.data.gallery) {
-    const list = tab === "最新" ? gallery.slice().reverse() : gallery.slice();
+    const list = orderShowcaseItems(gallery, tab);
     this.setData({
       currentPlazaTab: tab,
       displayGallery: list.slice(0, 4),
@@ -135,21 +136,44 @@ Page({
     });
 
     try {
-      const [assetsRes, tasksRes] = await Promise.all([
-        get("/assets?limit=12"),
-        get("/tasks?limit=50"),
-      ]);
-      const taskMap = {};
-      (tasksRes.items || []).forEach((task) => {
-        taskMap[task.id] = task;
-      });
-      const galleryItems = decorateGallery((assetsRes.items || []).map((item) => toAssetCardViewModel(item, taskMap)));
+      const showcaseRes = await get("/showcase?limit=24");
+      const galleryItems = decorateGallery((showcaseRes.items || []).map(toShowcaseCardViewModel));
       if (galleryItems.length) {
         gallery = galleryItems;
         styleTemplates = attachTemplateImages(fallbackTemplates, galleryItems);
+      } else {
+        const [assetsRes, tasksRes] = await Promise.all([
+          get("/assets?limit=12"),
+          get("/tasks?limit=50"),
+        ]);
+        const taskMap = {};
+        (tasksRes.items || []).forEach((task) => {
+          taskMap[task.id] = task;
+        });
+        const assetGallery = decorateGallery((assetsRes.items || []).map((item) => toAssetCardViewModel(item, taskMap)));
+        if (assetGallery.length) {
+          gallery = assetGallery;
+          styleTemplates = attachTemplateImages(fallbackTemplates, assetGallery);
+        }
       }
     } catch (err) {
-      // Keep fallback gallery.
+      try {
+        const [assetsRes, tasksRes] = await Promise.all([
+          get("/assets?limit=12"),
+          get("/tasks?limit=50"),
+        ]);
+        const taskMap = {};
+        (tasksRes.items || []).forEach((task) => {
+          taskMap[task.id] = task;
+        });
+        const assetGallery = decorateGallery((assetsRes.items || []).map((item) => toAssetCardViewModel(item, taskMap)));
+        if (assetGallery.length) {
+          gallery = assetGallery;
+          styleTemplates = attachTemplateImages(fallbackTemplates, assetGallery);
+        }
+      } catch (nestedErr) {
+        // Keep fallback gallery.
+      }
     }
 
     try {
@@ -240,8 +264,13 @@ Page({
 
   onGalleryTap(e) {
     const taskId = e.currentTarget.dataset.taskid;
+    const style = e.currentTarget.dataset.style || "";
     if (taskId) {
       wx.navigateTo({ url: `/pages/result/index?taskId=${encodeURIComponent(taskId)}` });
+      return;
+    }
+    if (style) {
+      this.goStyleTransfer(style);
       return;
     }
     this.goSquare();

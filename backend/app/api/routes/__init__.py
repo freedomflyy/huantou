@@ -8,6 +8,7 @@ from app.api.routes.materials import router as materials_router
 from app.api.routes.moderation import router as moderation_router
 from app.api.routes.points import router as points_router
 from app.api.routes.public_assets import router as public_assets_router
+from app.api.routes.showcase import router as showcase_router
 from app.api.routes.tasks import router as tasks_router
 
 api_router = APIRouter()
@@ -19,4 +20,5 @@ api_router.include_router(materials_router)
 api_router.include_router(moderation_router)
 api_router.include_router(points_router)
 api_router.include_router(public_assets_router)
+api_router.include_router(showcase_router)
 api_router.include_router(tasks_router)

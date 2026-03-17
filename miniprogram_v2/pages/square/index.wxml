@@ -22,7 +22,7 @@
 
     <view class="square-grid">
       <block wx:for="{{displayGallery}}" wx:key="id">
-        <view class="square-card" data-taskid="{{item.taskId}}" bindtap="onGalleryTap">
+        <view class="square-card" data-taskid="{{item.taskId}}" data-style="{{item.styleName}}" bindtap="onGalleryTap">
           <view class="square-cover {{item.coverClass}}">
             <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
           </view>

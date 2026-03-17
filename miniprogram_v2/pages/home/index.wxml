@@ -67,7 +67,7 @@
 
     <view class="plaza-grid">
       <block wx:for="{{displayGallery}}" wx:key="id">
-        <view class="plaza-card" data-taskid="{{item.taskId}}" bindtap="onGalleryTap">
+        <view class="plaza-card" data-taskid="{{item.taskId}}" data-style="{{item.styleName}}" bindtap="onGalleryTap">
           <view class="plaza-cover {{item.coverClass}}">
             <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
           </view>

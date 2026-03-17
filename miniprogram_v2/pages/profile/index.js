@@ -26,6 +26,7 @@ Page({
     inviteStatusText: "分享成功即可获得 100 积分",
     inviteStatusTone: "idle",
     shareCardUrl: "",
+    inviteRewardClaiming: false,
     profileEditorVisible: false,
     profileSaving: false,
     profileDraftNickname: "",
@@ -209,8 +210,10 @@ Page({
   },
 
   async claimInviteReward() {
+    if (this.data.inviteRewardClaiming) return;
     try {
       this.setData({
+        inviteRewardClaiming: true,
         inviteStatusText: "分享成功，正在领取奖励...",
         inviteStatusTone: "loading",
       });
@@ -233,12 +236,27 @@ Page({
         title: err.message || "奖励领取失败",
         icon: "none",
       });
+    } finally {
+      this.setData({
+        inviteRewardClaiming: false,
+      });
     }
+  },
+
+  queueInviteReward() {
+    if (this.data.inviteRewardClaiming) return;
+    this.setData({
+      inviteStatusText: "已发起分享，正在领取奖励...",
+      inviteStatusTone: "loading",
+    });
+    setTimeout(() => {
+      this.claimInviteReward();
+    }, 0);
   },
 
   onInviteTap() {
     this.setData({
-      inviteStatusText: "请通过“发送给朋友”完成分享，返回后会自动发放积分",
+      inviteStatusText: `发起一次分享后会自动领取 ${this.data.inviteRewardPoints || 100} 积分`,
       inviteStatusTone: "hint",
     });
   },
@@ -251,19 +269,11 @@ Page({
     const sharePayload = {
       title: "我在幻头做了很多好看的头像，来一起试试",
       path,
-      success: () => {
-        this.claimInviteReward();
-      },
-      fail: () => {
-        this.setData({
-          inviteStatusText: "这次分享没有完成，所以还没有加积分",
-          inviteStatusTone: "error",
-        });
-      },
     };
     if (this.data.shareCardUrl) {
       sharePayload.imageUrl = this.data.shareCardUrl;
     }
+    this.queueInviteReward();
     return sharePayload;
   },
 
@@ -277,6 +287,7 @@ Page({
     if (this.data.shareCardUrl) {
       timelinePayload.imageUrl = this.data.shareCardUrl;
     }
+    this.queueInviteReward();
     return timelinePayload;
   },
 

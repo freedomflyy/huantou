@@ -4,7 +4,7 @@ const { normalizeTaskCreatePayload } = require("../../utils/view-models");
 
 Page({
   data: {
-    providerOptions: ["volcengine", "mock"],
+    providerOptions: ["volcengine"],
     providerIndex: 0,
     inputImageUrl: "",
     rotate: "0",
