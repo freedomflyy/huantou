@@ -12,6 +12,7 @@ class PointsRules(BaseModel):
     signup_bonus: int
     daily_bonus: int
     redeem_points: int
+    invite_share_bonus: int
     txt2img_cost: int
     img2img_cost: int
     style_transfer_cost: int
@@ -56,3 +57,10 @@ class PointsRedeemCodeResponse(BaseModel):
     granted: bool
     points_balance: int
     reward_points: int
+
+
+class PointsInviteRewardResponse(BaseModel):
+    granted: bool
+    points_balance: int
+    reward_points: int
+    rewarded_at: datetime

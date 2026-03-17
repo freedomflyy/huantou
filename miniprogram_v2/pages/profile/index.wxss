@@ -1,1 +1,344 @@
-/* inherit global styles */
+.profile-page {
+  padding-bottom: 176rpx;
+}
+
+.profile-hero-card {
+  padding: 34rpx;
+  border-radius: 42rpx;
+  background: linear-gradient(135deg, #f37d3d 0%, #ec5b13 100%);
+  color: #ffffff;
+  box-shadow: 0 22rpx 42rpx rgba(236, 91, 19, 0.22);
+}
+
+.profile-hero-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 24rpx;
+  margin-bottom: 34rpx;
+}
+
+.profile-name {
+  color: #ffffff;
+  font-size: 56rpx;
+  font-weight: 700;
+  line-height: 1.12;
+}
+
+.profile-bio {
+  margin-top: 12rpx;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 28rpx;
+  line-height: 1.5;
+}
+
+.profile-avatar {
+  width: 114rpx;
+  height: 114rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 247, 242, 0.96);
+  color: #ec5b13;
+  font-size: 52rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.profile-avatar-image {
+  width: 100%;
+  height: 100%;
+}
+
+.profile-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18rpx;
+  padding-top: 28rpx;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.profile-edit-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 28rpx;
+}
+
+.profile-edit-copy {
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 24rpx;
+  line-height: 1.45;
+}
+
+.profile-edit-btn {
+  min-width: 156rpx;
+  height: 68rpx;
+  margin: 0;
+  padding: 0 26rpx;
+  border: none;
+  border-radius: 999rpx;
+  background: rgba(255, 248, 242, 0.18);
+  color: #ffffff;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.profile-edit-btn::after {
+  border: none;
+}
+
+.profile-stat {
+  text-align: center;
+}
+
+.profile-stat-num {
+  color: #ffffff;
+  font-size: 56rpx;
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+.profile-stat-label {
+  margin-top: 8rpx;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 24rpx;
+}
+
+.profile-menu-card,
+.profile-invite-card {
+  margin-top: 28rpx;
+  border-radius: 42rpx;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(236, 241, 247, 0.96);
+  box-shadow: 0 16rpx 36rpx rgba(36, 44, 64, 0.06);
+}
+
+.profile-menu-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  padding: 30rpx 30rpx 30rpx 28rpx;
+  border-bottom: 1px solid rgba(237, 241, 245, 0.86);
+}
+
+.profile-menu-item:last-child {
+  border-bottom: none;
+}
+
+.profile-menu-left {
+  display: flex;
+  align-items: center;
+  gap: 22rpx;
+  min-width: 0;
+}
+
+.profile-menu-icon {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 22rpx;
+  background: rgba(255, 244, 235, 0.96);
+  color: #ec5b13;
+  font-size: 30rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-menu-title {
+  color: #17141f;
+  font-size: 34rpx;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.profile-menu-note {
+  margin-top: 8rpx;
+  color: #a0adc2;
+  font-size: 24rpx;
+  line-height: 1.45;
+}
+
+.profile-menu-arrow {
+  color: #ced8e7;
+  font-size: 42rpx;
+  line-height: 1;
+}
+
+.profile-invite-card {
+  padding: 26rpx;
+}
+
+.profile-invite-btn {
+  width: 100%;
+  height: 104rpx;
+  border: none;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #ff7a1f 0%, #f45d13 100%);
+  color: #ffffff;
+  font-size: 36rpx;
+  font-weight: 700;
+  box-shadow: 0 20rpx 34rpx rgba(245, 106, 33, 0.22);
+}
+
+.profile-invite-btn::after {
+  border: none;
+}
+
+.profile-invite-note {
+  margin-top: 18rpx;
+  text-align: center;
+  color: #f0874f;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.profile-invite-note-hint {
+  color: #f0874f;
+}
+
+.profile-invite-note-loading {
+  color: #8b8178;
+}
+
+.profile-invite-note-success {
+  color: #4eaa81;
+}
+
+.profile-invite-note-error {
+  color: #d4645a;
+}
+
+.profile-editor-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(21, 18, 16, 0.32);
+  display: flex;
+  align-items: flex-end;
+}
+
+.profile-editor-panel {
+  width: 100%;
+  padding: 36rpx 32rpx calc(42rpx + env(safe-area-inset-bottom));
+  border-radius: 40rpx 40rpx 0 0;
+  background: rgba(255, 252, 249, 0.98);
+  box-shadow: 0 -18rpx 36rpx rgba(28, 20, 12, 0.08);
+  box-sizing: border-box;
+}
+
+.profile-editor-title {
+  color: #17141f;
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.profile-editor-subtitle {
+  margin-top: 10rpx;
+  color: #9aa6bb;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.profile-editor-avatar {
+  width: 180rpx;
+  height: 180rpx;
+  margin: 30rpx auto 0;
+  padding: 0;
+  border: none;
+  border-radius: 999rpx;
+  background: linear-gradient(180deg, #fff5ed 0%, #fffaf6 100%);
+  box-shadow: 0 14rpx 28rpx rgba(240, 133, 78, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-editor-avatar::after {
+  border: none;
+}
+
+.profile-editor-avatar-image,
+.profile-editor-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 999rpx;
+}
+
+.profile-editor-avatar-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f56a21;
+  font-size: 56rpx;
+  font-weight: 700;
+}
+
+.profile-editor-avatar-tag {
+  position: absolute;
+  left: 50%;
+  bottom: 12rpx;
+  transform: translateX(-50%);
+  min-width: 120rpx;
+  height: 42rpx;
+  padding: 0 18rpx;
+  border-radius: 999rpx;
+  background: rgba(17, 15, 20, 0.66);
+  color: #ffffff;
+  font-size: 20rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-editor-input {
+  height: 92rpx;
+  margin-top: 30rpx;
+  padding: 0 26rpx;
+  border-radius: 26rpx;
+  background: #ffffff;
+  border: 1px solid rgba(236, 223, 208, 0.95);
+  color: #17141f;
+  font-size: 30rpx;
+  box-sizing: border-box;
+}
+
+.profile-editor-actions {
+  display: flex;
+  gap: 18rpx;
+  margin-top: 28rpx;
+}
+
+.profile-editor-cancel,
+.profile-editor-save {
+  flex: 1;
+  height: 92rpx;
+  margin: 0;
+  border-radius: 28rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.profile-editor-cancel {
+  border: 1px solid rgba(240, 223, 208, 0.95);
+  background: #fffaf6;
+  color: #f0874f;
+}
+
+.profile-editor-save {
+  border: none;
+  background: linear-gradient(135deg, #ff7a1f 0%, #f45d13 100%);
+  color: #ffffff;
+  box-shadow: 0 18rpx 30rpx rgba(245, 106, 33, 0.18);
+}
+
+.profile-editor-cancel::after,
+.profile-editor-save::after {
+  border: none;
+}

@@ -2,48 +2,87 @@
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="container fixed-tab-space">
-    <view class="soft-card profile-hero">
-      <view class="profile-top">
+  <view class="container fixed-tab-space profile-page" style="{{pageTopStyle}}">
+    <view class="profile-hero-card">
+      <view class="profile-hero-top">
         <view>
           <view class="profile-name">{{user.nickname}}</view>
           <view class="profile-bio">{{user.signature}}</view>
         </view>
-        <view class="avatar">桃</view>
+        <view class="profile-avatar" bindtap="openProfileEditor">
+          <image wx:if="{{user.avatarUrl}}" class="profile-avatar-image" mode="aspectFill" src="{{user.avatarUrl}}" />
+          <view wx:else>{{user.avatarText}}</view>
+        </view>
       </view>
-      <view class="profile-stats">
-        <view class="stat-item">
-          <view class="stat-num">{{user.pointsBalance}}</view>
-          <view class="stat-label">当前积分</view>
+      <view class="profile-edit-row">
+        <view class="profile-edit-copy">轻触头像或按钮，修改你的头像和名字</view>
+        <button class="profile-edit-btn" bindtap="openProfileEditor">编辑资料</button>
+      </view>
+      <view class="profile-stats-row">
+        <view class="profile-stat">
+          <view class="profile-stat-num">{{user.pointsBalance}}</view>
+          <view class="profile-stat-label">当前积分</view>
         </view>
-        <view class="stat-item">
-          <view class="stat-num">{{user.works}}</view>
-          <view class="stat-label">已生成</view>
+        <view class="profile-stat">
+          <view class="profile-stat-num">{{user.works}}</view>
+          <view class="profile-stat-label">已生成</view>
         </view>
-        <view class="stat-item">
-          <view class="stat-num">{{user.favorites}}</view>
-          <view class="stat-label">收藏</view>
+        <view class="profile-stat">
+          <view class="profile-stat-num">{{user.favorites}}</view>
+          <view class="profile-stat-label">收藏</view>
         </view>
       </view>
     </view>
 
-    <view class="soft-card">
+    <view class="profile-menu-card">
       <block wx:for="{{menus}}" wx:key="key">
-        <view class="menu-link" data-key="{{item.key}}" bindtap="onMenuTap">
-          <view class="menu-left">
-            <view class="menu-icon">{{item.glyph}}</view>
+        <view class="profile-menu-item" data-key="{{item.key}}" bindtap="onMenuTap">
+          <view class="profile-menu-left">
+            <view class="profile-menu-icon">{{item.glyph}}</view>
             <view>
-              <view class="title-md">{{item.title}}</view>
-              <view class="subtitle mt-8">{{item.note}}</view>
+              <view class="profile-menu-title">{{item.title}}</view>
+              <view class="profile-menu-note">{{item.note}}</view>
             </view>
           </view>
-          <view class="menu-arrow">›</view>
+          <view class="profile-menu-arrow">›</view>
         </view>
       </block>
     </view>
 
-    <view class="soft-card">
-      <button class="btn btn-ghost" bindtap="goOnboarding">查看欢迎页</button>
+    <view class="profile-invite-card">
+      <button class="profile-invite-btn" open-type="share" data-action="invite" bindtap="onInviteTap">
+        邀请新朋友
+      </button>
+      <view class="profile-invite-note profile-invite-note-{{inviteStatusTone}}">
+        {{inviteStatusText}}
+      </view>
+    </view>
+
+    <view wx:if="{{profileEditorVisible}}" class="profile-editor-mask" catchtap="closeProfileEditor">
+      <view class="profile-editor-panel" catchtap="noop">
+        <view class="profile-editor-title">编辑资料</view>
+        <view class="profile-editor-subtitle">保持现在的风格，只更新你的个人展示信息</view>
+
+        <button class="profile-editor-avatar" open-type="chooseAvatar" bindchooseavatar="onChooseProfileAvatar">
+          <image wx:if="{{profileDraftAvatarUrl}}" class="profile-editor-avatar-image" mode="aspectFill" src="{{profileDraftAvatarUrl}}" />
+          <view wx:else class="profile-editor-avatar-fallback">{{user.avatarText}}</view>
+          <view class="profile-editor-avatar-tag">更换头像</view>
+        </button>
+
+        <input
+          class="profile-editor-input"
+          type="nickname"
+          maxlength="20"
+          placeholder="输入新的昵称"
+          value="{{profileDraftNickname}}"
+          bindinput="onProfileNicknameInput"
+        />
+
+        <view class="profile-editor-actions">
+          <button class="profile-editor-cancel" bindtap="closeProfileEditor">取消</button>
+          <button class="profile-editor-save" loading="{{profileSaving}}" bindtap="saveProfileEditor">保存</button>
+        </view>
+      </view>
     </view>
 
     <bottom-tab current="profile" />

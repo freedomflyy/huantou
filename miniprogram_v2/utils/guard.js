@@ -1,4 +1,4 @@
-const { isLoggedIn } = require("./session");
+const { isLoggedIn, hasRealProfile } = require("./session");
 const { ensureSession } = require("./auth");
 const { ENABLE_DEMO_MODE } = require("../config");
 
@@ -6,7 +6,7 @@ async function ensureLogin() {
   if (ENABLE_DEMO_MODE) {
     return true;
   }
-  if (isLoggedIn()) {
+  if (isLoggedIn() && hasRealProfile()) {
     return true;
   }
   try {

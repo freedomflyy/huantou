@@ -1,19 +1,353 @@
-.onboarding-shell {
+.page-shell {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #fff9f3 0%, #ffe9d1 100%);
+  overflow: hidden;
+}
+
+.login-shell {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-top: 80rpx;
-  padding-bottom: 120rpx;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 132rpx;
+  padding-bottom: 118rpx;
 }
 
-.onboarding-visual {
+.login-bg-glow {
+  position: absolute;
+  border-radius: 999rpx;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.login-bg-main {
+  top: 40rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 880rpx;
+  height: 880rpx;
+  background: radial-gradient(circle, rgba(255, 170, 104, 0.26) 0%, rgba(255, 255, 255, 0) 70%);
+  filter: blur(48rpx);
+}
+
+.login-bg-accent-1 {
+  right: -120rpx;
+  bottom: 240rpx;
+  width: 460rpx;
+  height: 460rpx;
+  background: radial-gradient(circle, rgba(255, 202, 162, 0.28) 0%, rgba(255, 255, 255, 0) 70%);
+  filter: blur(44rpx);
+}
+
+.login-bg-accent-2 {
+  left: -140rpx;
+  top: 420rpx;
+  width: 500rpx;
+  height: 500rpx;
+  background: radial-gradient(circle, rgba(255, 129, 38, 0.12) 0%, rgba(255, 255, 255, 0) 72%);
+  filter: blur(52rpx);
+}
+
+.login-brand-block {
   width: 100%;
-  height: 520rpx;
-  border-radius: 42rpx;
-  margin-bottom: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 28rpx;
 }
 
-.onboarding-copy {
-  margin-bottom: 12rpx;
+.login-brand-avatar {
+  width: 240rpx;
+  height: 240rpx;
+  border: 8rpx solid rgba(255, 255, 255, 0.98);
+  border-radius: 999rpx;
+  overflow: hidden;
+  box-shadow: 0 22rpx 42rpx rgba(78, 50, 22, 0.14);
+  background: rgba(245, 245, 245, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-brand-avatar-fallback {
+  color: #d4d9e2;
+  font-size: 76rpx;
+  font-weight: 700;
+}
+
+.login-brand-avatar-image {
+  width: 100%;
+  height: 100%;
+}
+
+.login-brand-title {
+  margin-top: 70rpx;
+  color: #161826;
+  font-size: 78rpx;
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -2rpx;
+}
+
+.login-brand-subtitle {
+  margin-top: 22rpx;
+  color: #7c879c;
+  font-size: 28rpx;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+.login-form-block {
+  width: 100%;
+}
+
+.login-wechat-btn {
+  width: 100%;
+  height: 110rpx;
+  border: none;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, #17c75d 0%, #09bf59 100%);
+  color: #ffffff;
+  box-shadow: 0 16rpx 34rpx rgba(11, 190, 88, 0.22);
+}
+
+.login-wechat-btn::after {
+  border: none;
+}
+
+.login-wechat-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18rpx;
+  font-size: 34rpx;
+  font-weight: 700;
+}
+
+.login-wechat-icon {
+  width: 44rpx;
+  height: 44rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.16);
+  color: #ffffff;
+  font-size: 24rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-secondary-row {
+  margin-top: 42rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26rpx;
+}
+
+.login-secondary-link {
+  color: #a0abbe;
+  font-size: 28rpx;
+  font-weight: 500;
+}
+
+.login-secondary-divider {
+  width: 1px;
+  height: 24rpx;
+  background: rgba(207, 215, 226, 0.9);
+}
+
+.login-legal-block {
+  width: 100%;
+  padding-top: 84rpx;
+}
+
+.login-check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 18rpx;
+  max-width: 560rpx;
+  margin: 0 auto;
+}
+
+.login-check-box {
+  width: 32rpx;
+  height: 32rpx;
+  border-radius: 12rpx;
+  border: 2rpx solid #d5dce7;
+  background: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 4rpx;
+}
+
+.login-check-box-active {
+  border-color: #f56a21;
+  background: #f56a21;
+}
+
+.login-check-mark {
+  color: #ffffff;
+  font-size: 18rpx;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.login-legal-copy {
+  color: #8e97a9;
+  font-size: 24rpx;
+  line-height: 1.6;
+}
+
+.login-legal-link {
+  color: #657086;
+}
+
+.login-error-text {
+  margin-top: 18rpx;
+  color: #d4645a;
+  font-size: 24rpx;
+  line-height: 1.5;
+}
+
+.login-engine-tag {
+  margin-top: 72rpx;
+  text-align: center;
+  color: #d8dde6;
+  font-size: 22rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+}
+
+.login-sheet-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(16, 12, 8, 0.22);
+  display: flex;
+  align-items: flex-end;
+}
+
+.login-sheet-panel {
+  width: 100%;
+  padding: 34rpx 32rpx calc(42rpx + env(safe-area-inset-bottom));
+  border-radius: 40rpx 40rpx 0 0;
+  background: rgba(255, 251, 247, 0.98);
+  box-shadow: 0 -18rpx 36rpx rgba(43, 24, 9, 0.08);
+  box-sizing: border-box;
+}
+
+.login-sheet-title {
+  color: #17141f;
+  font-size: 38rpx;
+  font-weight: 700;
+}
+
+.login-sheet-subtitle {
+  margin-top: 12rpx;
+  color: #8e97a9;
+  font-size: 24rpx;
+  line-height: 1.55;
+}
+
+.login-sheet-avatar {
+  width: 176rpx;
+  height: 176rpx;
+  margin: 28rpx auto 0;
+  padding: 0;
+  border: 8rpx solid rgba(255, 255, 255, 0.96);
+  border-radius: 999rpx;
+  background: rgba(245, 245, 245, 0.96);
+  box-shadow: 0 18rpx 32rpx rgba(69, 42, 17, 0.12);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-sheet-avatar::after {
+  border: none;
+}
+
+.login-sheet-avatar-image,
+.login-sheet-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 999rpx;
+}
+
+.login-sheet-avatar-fallback {
+  color: #d4d9e2;
+  font-size: 64rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-sheet-avatar-tag {
+  position: absolute;
+  left: 50%;
+  bottom: 10rpx;
+  transform: translateX(-50%);
+  min-width: 118rpx;
+  height: 40rpx;
+  padding: 0 16rpx;
+  border-radius: 999rpx;
+  background: rgba(17, 15, 20, 0.62);
+  color: #ffffff;
+  font-size: 20rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login-sheet-input {
+  width: 100%;
+  height: 92rpx;
+  padding: 0 28rpx;
+  margin-top: 28rpx;
+  border-radius: 28rpx;
+  background: rgba(255, 255, 255, 0.98);
+  color: #1c1f2a;
+  font-size: 30rpx;
+  border: 1px solid rgba(240, 226, 215, 0.96);
+  box-shadow: 0 12rpx 22rpx rgba(67, 45, 26, 0.04);
+  box-sizing: border-box;
+}
+
+.login-sheet-actions {
+  display: flex;
+  gap: 18rpx;
+  margin-top: 28rpx;
+}
+
+.login-sheet-cancel,
+.login-sheet-confirm {
+  flex: 1;
+  height: 92rpx;
+  margin: 0;
+  border-radius: 999rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.login-sheet-cancel {
+  border: 1px solid rgba(255, 207, 181, 0.96);
+  background: #fff7f1;
+  color: #f08d50;
+}
+
+.login-sheet-confirm {
+  border: none;
+  background: linear-gradient(135deg, #17c75d 0%, #09bf59 100%);
+  color: #ffffff;
+  box-shadow: 0 16rpx 28rpx rgba(11, 190, 88, 0.18);
+}
+
+.login-sheet-cancel::after,
+.login-sheet-confirm::after {
+  border: none;
 }

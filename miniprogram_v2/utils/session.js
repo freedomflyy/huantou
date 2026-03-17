@@ -26,6 +26,14 @@ function getUser() {
   return wx.getStorageSync("user_info_v2") || null;
 }
 
+function hasRealProfile() {
+  const user = getUser();
+  if (!user) return false;
+  const nickname = (user.nickname || "").trim();
+  const avatarUrl = (user.avatar_url || "").trim();
+  return !!nickname && nickname !== "微信用户" && !!avatarUrl;
+}
+
 function isLoggedIn() {
   return !!getToken();
 }
@@ -36,6 +44,7 @@ module.exports = {
   getToken,
   getRefreshToken,
   getUser,
+  hasRealProfile,
   isLoggedIn,
   updateUser,
 };

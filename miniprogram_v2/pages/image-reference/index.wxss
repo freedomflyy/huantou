@@ -6,7 +6,7 @@
 }
 
 .style-header {
-  padding: 36rpx 32rpx 18rpx;
+  padding: 0 32rpx 18rpx;
   display: flex;
   align-items: flex-start;
   gap: 18rpx;

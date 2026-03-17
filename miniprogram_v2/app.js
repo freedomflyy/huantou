@@ -5,6 +5,7 @@ App({
     token: "",
     user: null,
     selectedAssetTarget: "",
+    uiMetrics: null,
   },
 
   onLaunch() {

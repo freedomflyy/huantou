@@ -2,7 +2,7 @@
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="container fixed-tab-space create-page">
+  <view class="container fixed-tab-space create-page" style="{{pageTopStyle}}">
     <view class="create-topbar">
       <view class="create-back" bindtap="onBack">←</view>
       <view class="create-top-title">开始创作</view>

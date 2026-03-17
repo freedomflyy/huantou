@@ -1,12 +1,12 @@
 .create-page {
-  padding-top: 8rpx;
+  padding-top: 0;
 }
 
 .create-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 6rpx 4rpx 14rpx;
+  padding: 0 4rpx 14rpx;
 }
 
 .create-back,

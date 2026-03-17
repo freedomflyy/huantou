@@ -22,6 +22,11 @@ class WechatLoginResponse(BaseModel):
     user: UserInfo
 
 
+class ProfileUpdateRequest(BaseModel):
+    nickname: str | None = Field(default=None, max_length=64)
+    avatar_url: str | None = None
+
+
 class RefreshTokenRequest(BaseModel):
     refresh_token: str = Field(min_length=20, max_length=4096)
 

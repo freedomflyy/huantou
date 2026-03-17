@@ -2,7 +2,7 @@
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="style-header">
+  <view class="style-header" style="{{headerStyle}}">
     <view class="style-back" bindtap="onBack">←</view>
     <view class="style-header-copy">
       <view class="style-header-title">风格迁移</view>

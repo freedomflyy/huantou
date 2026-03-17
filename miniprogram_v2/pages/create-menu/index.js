@@ -1,6 +1,7 @@
 const { ensureLogin } = require("../../utils/guard");
 const { get } = require("../../utils/request");
 const { getStyleTemplates } = require("../../utils/avatar-studio");
+const { getUiMetrics } = require("../../utils/ui-metrics");
 
 const FEATURE_ITEMS = [
   { key: "style-transfer", title: "风格迁移", note: "多种艺术风格", glyph: "绘", tone: "tone-pink" },
@@ -34,6 +35,14 @@ Page({
   data: {
     features: FEATURE_ITEMS,
     inspirations: getFallbackInspirations(),
+    pageTopStyle: "",
+  },
+
+  onLoad() {
+    const metrics = getUiMetrics();
+    this.setData({
+      pageTopStyle: `padding-top:${metrics.navContentTop}px;`,
+    });
   },
 
   async onShow() {

@@ -4,7 +4,19 @@ const API_HOSTS = {
   tunnel: "https://828md02534xr.vicp.fun",
 };
 
-const API_BASE_URL = API_HOSTS[API_ENV] || API_HOSTS.tunnel;
+function getApiBaseUrl() {
+  try {
+    const info = wx.getSystemInfoSync ? wx.getSystemInfoSync() : null;
+    if (info && info.platform === "devtools") {
+      return API_HOSTS.local;
+    }
+  } catch (err) {
+    // Ignore runtime detection failures and fall back to the configured host.
+  }
+  return API_HOSTS[API_ENV] || API_HOSTS.tunnel;
+}
+
+const API_BASE_URL = getApiBaseUrl();
 const API_PREFIX = "/api/v1";
 const ENABLE_DEMO_MODE = false;
 
@@ -12,6 +24,7 @@ module.exports = {
   API_ENV,
   API_HOSTS,
   API_BASE_URL,
+  getApiBaseUrl,
   API_PREFIX,
   ENABLE_DEMO_MODE,
 };

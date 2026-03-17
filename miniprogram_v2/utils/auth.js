@@ -1,7 +1,5 @@
-const { post } = require("./request");
-const { saveSession, clearSession, getRefreshToken, getUser, isLoggedIn } = require("./session");
-
-let loginPromise = null;
+const { post, refreshSession } = require("./request");
+const { saveSession, clearSession, getRefreshToken, getUser, isLoggedIn, hasRealProfile } = require("./session");
 
 function getAppSafe() {
   try {
@@ -49,18 +47,18 @@ async function loginWithWechat(profile = {}) {
 }
 
 function ensureSession() {
-  if (isLoggedIn()) {
+  if (isLoggedIn() && hasRealProfile()) {
     return Promise.resolve(getUser());
   }
-  if (loginPromise) {
-    return loginPromise;
-  }
-  loginPromise = loginWithWechat()
-    .then((res) => res.user)
-    .finally(() => {
-      loginPromise = null;
+  if (getRefreshToken()) {
+    return refreshSession().then(() => {
+      if (hasRealProfile()) {
+        return getUser();
+      }
+      throw new Error("请先完成微信头像昵称授权");
     });
-  return loginPromise;
+  }
+  return Promise.reject(new Error("请先完成微信头像昵称授权"));
 }
 
 async function logoutCurrent() {

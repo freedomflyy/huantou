@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     points_daily_bonus: int = 10
     points_redeem_code: str | None = "zbzl"
     points_redeem_points: int = 1000
+    points_invite_share_bonus: int = 100
     points_txt2img_cost: int = 20
     points_img2img_cost: int = 18
     points_style_transfer_cost: int = 22

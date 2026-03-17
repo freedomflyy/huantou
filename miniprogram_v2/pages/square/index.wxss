@@ -1,5 +1,5 @@
 .square-page {
-  padding-top: 10rpx;
+  padding-top: 0;
 }
 
 .square-head {

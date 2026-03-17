@@ -87,9 +87,9 @@
       "title": "头像框 01",
       "category": "头像框",
       "storage_provider": "cos",
-      "object_key": "materials/frames/frame-01.jpg",
-      "file_url": "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/frames/frame-01.jpg",
-      "mime_type": "image/jpeg"
+      "object_key": "materials/frames/frame-01.png",
+      "file_url": "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/frames/frame-01.png",
+      "mime_type": "image/png"
     },
     {
       "id": "frame-02",

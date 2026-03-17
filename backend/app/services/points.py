@@ -16,6 +16,7 @@ class PointsRuleSnapshot:
     signup_bonus: int
     daily_bonus: int
     redeem_points: int
+    invite_share_bonus: int
     txt2img_cost: int
     img2img_cost: int
     style_transfer_cost: int
@@ -26,6 +27,7 @@ def get_points_rules() -> PointsRuleSnapshot:
         signup_bonus=settings.points_signup_bonus,
         daily_bonus=settings.points_daily_bonus,
         redeem_points=settings.points_redeem_points,
+        invite_share_bonus=settings.points_invite_share_bonus,
         txt2img_cost=settings.points_txt2img_cost,
         img2img_cost=settings.points_img2img_cost,
         style_transfer_cost=settings.points_style_transfer_cost,
@@ -174,3 +176,45 @@ def has_task_refund(db: Session, *, task_id: UUID) -> bool:
         .limit(1)
     )
     return db.scalar(stmt) is not None
+
+
+def grant_invite_share_bonus_if_needed(
+    db: Session,
+    *,
+    user: User,
+    operator: str = "miniapp_share",
+    now: datetime | None = None,
+) -> tuple[bool, int]:
+    reward_points = max(0, settings.points_invite_share_bonus)
+    if reward_points <= 0:
+        return False, reward_points
+
+    current = now or datetime.now(timezone.utc)
+    reason = f"invite_share_bonus:{current.date().isoformat()}"
+
+    db.scalar(
+        select(User.id)
+        .where(User.id == user.id)
+        .with_for_update()
+    )
+    exists = db.scalar(
+        select(PointsLedger.id)
+        .where(
+            PointsLedger.user_id == user.id,
+            PointsLedger.change_type == PointsChangeType.ADMIN_ADJUST,
+            PointsLedger.reason == reason,
+        )
+        .limit(1)
+    )
+    if exists:
+        return False, reward_points
+
+    add_points_ledger(
+        db,
+        user=user,
+        change_type=PointsChangeType.ADMIN_ADJUST,
+        delta=reward_points,
+        reason=reason,
+        operator=operator,
+    )
+    return True, reward_points

@@ -78,6 +78,14 @@ STICKER_GROUPS = {
     "雪の图标": {"id": "snowicons", "title": "雪の图标"},
 }
 
+FRAME_SOURCE_OVERRIDES = {
+    1: SOURCE_DIR / "头像框" / "河马素材35.png",
+}
+
+REMOVED_FRAME_SOURCES = {
+    (SOURCE_DIR / "头像框" / "河马素材03.jpg").resolve(),
+}
+
 
 def _upload_file(source_path: Path, object_key: str) -> dict:
     mime_type = mimetypes.guess_type(source_path.name)[0] or "application/octet-stream"
@@ -92,6 +100,29 @@ def _upload_file(source_path: Path, object_key: str) -> dict:
         "file_url": stored.file_url,
         "mime_type": stored.mime_type,
     }
+
+
+def _iter_frame_sources(frame_dir: Path) -> list[Path]:
+    ordered: list[Path] = []
+    used_paths: set[Path] = set()
+
+    for index in sorted(FRAME_SOURCE_OVERRIDES):
+        source_path = FRAME_SOURCE_OVERRIDES[index]
+        if not source_path.exists():
+            continue
+        ordered.append(source_path)
+        used_paths.add(source_path.resolve())
+
+    for source_path in sorted(frame_dir.iterdir()):
+        if not source_path.is_file():
+            continue
+        if source_path.resolve() in used_paths:
+            continue
+        if source_path.resolve() in REMOVED_FRAME_SOURCES:
+            continue
+        ordered.append(source_path)
+
+    return ordered
 
 
 def build_catalog() -> dict:
@@ -113,9 +144,7 @@ def build_catalog() -> dict:
         )
 
     frame_dir = SOURCE_DIR / "头像框"
-    for index, source_path in enumerate(sorted(frame_dir.iterdir()), start=1):
-        if not source_path.is_file():
-            continue
+    for index, source_path in enumerate(_iter_frame_sources(frame_dir), start=1):
         object_key = f"materials/frames/frame-{index:02d}{source_path.suffix.lower()}"
         uploaded = _upload_file(source_path, object_key)
         frames.append(

@@ -2,6 +2,7 @@ const { ensureLogin } = require("../../utils/guard");
 const { get } = require("../../utils/request");
 const { toAssetCardViewModel } = require("../../utils/view-models");
 const { getShowcaseFallback } = require("../../utils/avatar-studio");
+const { getUiMetrics } = require("../../utils/ui-metrics");
 
 const PLAZA_TABS = ["热门", "最新"];
 const FALLBACK_CREATORS = ["用户9527", "AvatarMaster", "桃桃同学", "暖光练习生"];
@@ -27,6 +28,14 @@ Page({
     currentPlazaTab: PLAZA_TABS[0],
     gallery: getFallbackGallery(),
     displayGallery: getFallbackGallery(),
+    pageTopStyle: "",
+  },
+
+  onLoad() {
+    const metrics = getUiMetrics();
+    this.setData({
+      pageTopStyle: `padding-top:${metrics.pageTopInset}px;`,
+    });
   },
 
   async onShow() {

@@ -3,10 +3,12 @@ const { get } = require("../../utils/request");
 const { getUser } = require("../../utils/session");
 const { toAssetCardViewModel } = require("../../utils/view-models");
 const { getStyleTemplates, getShowcaseFallback } = require("../../utils/avatar-studio");
-
-const FEATURE_ITEMS = [
-  { key: "smart-edit", title: "图像编辑", note: "细节优化", tone: "tone-blue" },
-  { key: "cutout", title: "智能抠图", note: "背景替换", tone: "tone-purple" },
+const { getUiMetrics } = require("../../utils/ui-metrics");
+const { fetchPublicAssets } = require("../../utils/public-assets");
+const QUICK_ACTIONS = [
+  { key: "text-generate", title: "AI 文生图", glyph: "文" },
+  { key: "smart-edit", title: "智能修改", glyph: "修" },
+  { key: "decorate", title: "贴纸像框", glyph: "框" },
 ];
 
 const PLAZA_TABS = ["热门", "最新"];
@@ -50,17 +52,58 @@ function decorateGallery(items) {
   }));
 }
 
+function buildHeroSlides(templates, heroImageUrl = "") {
+  const styleSlides = (templates || []).slice(0, 3).map((item) => ({
+    id: `hero-${item.id}`,
+    title: item.name,
+    desc: item.desc,
+    badge: item.badge || "人气风格",
+    imageUrl: item.imageUrl || "",
+    coverClass: item.coverClass || "cover-cream",
+    ctaText: "立即创建",
+    styleName: item.name,
+  }));
+
+  return [
+    {
+      id: "hero-style-transfer",
+      title: "风格迁移",
+      desc: "用50多款全新艺术模板转换你的照片。",
+      badge: "新品上市",
+      imageUrl: heroImageUrl,
+      coverClass: "cover-night",
+      ctaText: "立即创建",
+      styleName: "",
+    },
+    ...styleSlides,
+  ];
+}
+
 Page({
   data: {
     user: {
       nickname: "创作者",
     },
-    featureItems: FEATURE_ITEMS,
+    quickActions: QUICK_ACTIONS,
     plazaTabs: PLAZA_TABS,
     currentPlazaTab: PLAZA_TABS[0],
     styleTemplates: attachTemplateImages(getStyleTemplates(), []),
+    heroSlides: buildHeroSlides(attachTemplateImages(getStyleTemplates(), []), ""),
+    currentHeroIndex: 0,
     gallery: getFallbackGallery(),
     displayGallery: getFallbackGallery().slice(0, 4),
+    headerStyle: "",
+    headerSpacerStyle: "",
+    brandingLogoUrl: "",
+    heroImageUrl: "",
+  },
+
+  onLoad() {
+    const metrics = getUiMetrics();
+    this.setData({
+      headerStyle: `padding-top:${metrics.navContentTop}px;`,
+      headerSpacerStyle: `height:${metrics.homeSpacerHeight}px;`,
+    });
   },
 
   async onShow() {
@@ -83,6 +126,7 @@ Page({
     const fallbackTemplates = getStyleTemplates();
     let gallery = fallbackGallery;
     let styleTemplates = attachTemplateImages(fallbackTemplates, fallbackGallery);
+    let publicAssets = null;
 
     this.setData({
       user: {
@@ -109,6 +153,12 @@ Page({
     }
 
     try {
+      publicAssets = await fetchPublicAssets();
+    } catch (err) {
+      // Keep static-only fallback when the public asset endpoint is unavailable.
+    }
+
+    try {
       const materialsRes = await get("/materials");
       if (materialsRes.home_styles && materialsRes.home_styles.length) {
         styleTemplates = mapHomeStyles(materialsRes.home_styles, fallbackTemplates);
@@ -120,12 +170,18 @@ Page({
     this.setData({
       gallery,
       styleTemplates,
+      heroSlides: buildHeroSlides(styleTemplates, (publicAssets && publicAssets.homeHeroUrl) || ""),
+      heroImageUrl: (publicAssets && publicAssets.homeHeroUrl) || "",
+      brandingLogoUrl: (publicAssets && publicAssets.loginLogoUrl) || "",
     });
     this.setDisplayGallery(this.data.currentPlazaTab, gallery);
   },
 
-  goStyleTransfer() {
-    wx.navigateTo({ url: "/pages/image-reference/index" });
+  goStyleTransfer(style = "") {
+    const url = style
+      ? `/pages/image-reference/index?style=${encodeURIComponent(style)}`
+      : "/pages/image-reference/index";
+    wx.navigateTo({ url });
   },
 
   goTextGenerate() {
@@ -136,22 +192,44 @@ Page({
     wx.reLaunch({ url: "/pages/square/index" });
   },
 
-  goPoints() {
-    wx.navigateTo({ url: "/pages/points/index" });
+  goProfile() {
+    wx.reLaunch({ url: "/pages/profile/index" });
   },
 
-  onFeatureTap(e) {
+  onQuickActionTap(e) {
     const key = e.currentTarget.dataset.key;
-    if (key === "smart-edit" || key === "cutout") {
-      wx.navigateTo({ url: "/pages/image-edit/index" });
-    }
+    const routeMap = {
+      "text-generate": "/pages/text-generate/index",
+      "smart-edit": "/pages/image-edit/index",
+      decorate: "/pages/avatar-decorate/index",
+    };
+    if (!routeMap[key]) return;
+    wx.navigateTo({ url: routeMap[key] });
+  },
+
+  onHeroChange(e) {
+    this.setData({
+      currentHeroIndex: e.detail.current || 0,
+    });
+  },
+
+  onHeroSlideTap(e) {
+    const style = e.currentTarget.dataset.style || "";
+    this.goStyleTransfer(style);
+  },
+
+  onHeroCtaTap(e) {
+    const style = e.currentTarget.dataset.style || "";
+    this.goStyleTransfer(style);
   },
 
   onTemplateTap(e) {
     const style = e.currentTarget.dataset.style;
-    wx.navigateTo({
-      url: `/pages/image-reference/index?style=${encodeURIComponent(style || "")}`,
-    });
+    if (!style) {
+      this.goStyleTransfer();
+      return;
+    }
+    this.goStyleTransfer(style);
   },
 
   onPlazaTabTap(e) {

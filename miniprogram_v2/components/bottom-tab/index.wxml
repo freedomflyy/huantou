@@ -1,10 +1,12 @@
 <view class="tab-wrap">
   <block wx:for="{{tabs}}" wx:key="key">
     <view class="tab-item {{current===item.key?'active':''}} {{item.primary?'primary-tab':''}}" data-key="{{item.key}}" bindtap="onTabTap">
-      <view class="tab-icon-shell {{item.primary ? 'tab-icon-shell-primary' : ''}}">
-        <view class="tab-icon {{item.primary?'tab-icon-primary':''}}">{{item.glyph}}</view>
+      <view class="tab-card {{current===item.key?'tab-card-active':''}} {{item.primary ? 'tab-card-primary' : ''}}">
+        <view class="tab-icon-shell {{item.primary ? 'tab-icon-shell-primary' : ''}}">
+          <view class="tab-icon {{item.primary?'tab-icon-primary':''}}">{{item.glyph}}</view>
+        </view>
+        <view class="tab-text">{{item.text}}</view>
       </view>
-      <view class="tab-text">{{item.text}}</view>
     </view>
   </block>
 </view>

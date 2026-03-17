@@ -2,7 +2,7 @@
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="edit-nav">
+  <view class="edit-nav" style="{{navStyle}}">
     <view class="edit-nav-back" bindtap="onBack">←</view>
     <view class="edit-nav-center">
       <view class="edit-nav-title">AI 幻头</view>

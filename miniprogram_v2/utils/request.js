@@ -1,4 +1,4 @@
-const { API_BASE_URL, API_PREFIX } = require("../config");
+const { getApiBaseUrl, API_PREFIX } = require("../config");
 const { getToken, getRefreshToken, getUser, saveSession, clearSession } = require("./session");
 
 let refreshPromise = null;
@@ -23,7 +23,7 @@ function classifyError(statusCode, data, errMsg) {
 }
 
 function buildUrl(path) {
-  return `${API_BASE_URL}${API_PREFIX}${path}`;
+  return `${getApiBaseUrl()}${API_PREFIX}${path}`;
 }
 
 function isAuthPath(path) {
@@ -188,6 +188,10 @@ function post(path, data = {}, options = {}) {
   return request(path, { ...options, method: "POST", data });
 }
 
+function patch(path, data = {}, options = {}) {
+  return request(path, { ...options, method: "PATCH", data });
+}
+
 function del(path, options = {}) {
   return request(path, { ...options, method: "DELETE" });
 }
@@ -197,6 +201,7 @@ module.exports = {
   upload,
   get,
   post,
+  patch,
   del,
   refreshSession,
 };

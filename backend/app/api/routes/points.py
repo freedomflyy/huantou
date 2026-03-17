@@ -12,13 +12,19 @@ from app.models import PointsLedger, User
 from app.schemas.points import (
     PointsBalanceResponse,
     PointsCheckInResponse,
+    PointsInviteRewardResponse,
     PointsLedgerItem,
     PointsLedgerListResponse,
     PointsRedeemCodeRequest,
     PointsRedeemCodeResponse,
     PointsRules,
 )
-from app.services.points import get_points_rules, grant_daily_bonus_if_needed, redeem_points_code
+from app.services.points import (
+    get_points_rules,
+    grant_daily_bonus_if_needed,
+    grant_invite_share_bonus_if_needed,
+    redeem_points_code,
+)
 
 router = APIRouter(prefix="/points", tags=["points"])
 
@@ -92,4 +98,26 @@ def redeem_code_points(
         granted=granted,
         points_balance=user.points_balance,
         reward_points=reward_points,
+    )
+
+
+@router.post("/invite-share", response_model=PointsInviteRewardResponse)
+def invite_share_points(
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+) -> PointsInviteRewardResponse:
+    now = datetime.now(timezone.utc)
+    granted, reward_points = grant_invite_share_bonus_if_needed(
+        db,
+        user=user,
+        operator="miniapp_invite_share",
+        now=now,
+    )
+    db.commit()
+    db.refresh(user)
+    return PointsInviteRewardResponse(
+        granted=granted,
+        points_balance=user.points_balance,
+        reward_points=reward_points,
+        rewarded_at=now,
     )

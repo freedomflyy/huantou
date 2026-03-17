@@ -1,4 +1,4 @@
-<view class="top-bar">
+<view class="top-bar" style="{{topBarStyle}}">
   <view class="row">
     <view class="left-wrap">
       <view wx:if="{{showBack}}" class="back-btn" bindtap="onBack">←</view>

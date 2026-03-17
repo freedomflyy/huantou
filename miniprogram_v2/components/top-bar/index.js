@@ -1,3 +1,5 @@
+const { getUiMetrics } = require("../../utils/ui-metrics");
+
 Component({
   properties: {
     title: { type: String, value: "" },
@@ -5,6 +7,15 @@ Component({
     showBack: { type: Boolean, value: true },
     backUrl: { type: String, value: "" },
     rightText: { type: String, value: "" },
+  },
+  data: {
+    topBarStyle: "",
+  },
+  attached() {
+    const metrics = getUiMetrics();
+    this.setData({
+      topBarStyle: `padding-top:${metrics.navContentTop}px;`,
+    });
   },
   methods: {
     onBack() {

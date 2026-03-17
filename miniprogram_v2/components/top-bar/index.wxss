@@ -1,5 +1,13 @@
 .top-bar {
-  padding: 6rpx 4rpx 24rpx;
+  padding: 0 4rpx 20rpx;
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 72rpx;
 }
 
 .left-wrap {
@@ -29,7 +37,7 @@
 }
 
 .bar-subtitle {
-  margin-top: 6rpx;
+  margin-top: 4rpx;
   color: #8d796d;
   font-size: 22rpx;
 }

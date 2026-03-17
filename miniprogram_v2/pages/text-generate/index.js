@@ -2,6 +2,7 @@ const { ensureLogin } = require("../../utils/guard");
 const { get, post } = require("../../utils/request");
 const { normalizeTaskCreatePayload } = require("../../utils/view-models");
 const { getTextStyleOptions, getTextPromptSamples } = require("../../utils/avatar-studio");
+const { getUiMetrics } = require("../../utils/ui-metrics");
 
 const DEFAULT_RULES = {
   txt2img_cost: 20,
@@ -163,9 +164,14 @@ Page({
     rules: DEFAULT_RULES,
     submitting: false,
     errorMsg: "",
+    navStyle: "",
   },
 
   onLoad(query) {
+    const metrics = getUiMetrics();
+    this.setData({
+      navStyle: `padding-top:${metrics.navContentTop}px;`,
+    });
     if (query && query.style) {
       this.setData({ selectedStyle: decodeURIComponent(query.style) });
     }

@@ -12,6 +12,7 @@ from app.models import PointsChangeType, User, UserStatus
 from app.schemas.auth import (
     LogoutAllResponse,
     LogoutRequest,
+    ProfileUpdateRequest,
     LogoutResponse,
     RefreshTokenRequest,
     RefreshTokenResponse,
@@ -100,6 +101,25 @@ def wechat_login(payload: WechatLoginRequest, db: Session = Depends(get_db)) -> 
         daily_bonus_granted=daily_bonus_granted,
         user=UserInfo.model_validate(user),
     )
+
+
+@router.patch("/profile", response_model=UserInfo)
+def update_profile(
+    payload: ProfileUpdateRequest,
+    db: Session = Depends(get_db),
+    user: User = Depends(get_current_user),
+) -> UserInfo:
+    if payload.nickname is not None:
+        nickname = payload.nickname.strip()
+        if nickname:
+            user.nickname = nickname
+    if payload.avatar_url is not None:
+        avatar_url = payload.avatar_url.strip()
+        if avatar_url:
+            user.avatar_url = avatar_url
+    db.commit()
+    db.refresh(user)
+    return UserInfo.model_validate(user)
 
 
 @router.post("/refresh", response_model=RefreshTokenResponse)

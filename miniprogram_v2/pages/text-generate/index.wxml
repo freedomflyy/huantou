@@ -2,7 +2,7 @@
   <view class="float-glow glow-peach"></view>
   <view class="float-glow glow-cream"></view>
 
-  <view class="text-nav">
+  <view class="text-nav" style="{{navStyle}}">
     <view class="text-nav-back" bindtap="onBack">←</view>
     <view class="text-nav-title">AI 文生图</view>
     <view class="text-nav-space"></view>

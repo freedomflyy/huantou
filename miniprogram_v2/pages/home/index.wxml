@@ -3,70 +3,55 @@
   <view class="float-glow glow-cream"></view>
 
   <view class="home-fixed-head">
-    <view class="container home-fixed-inner">
-      <view class="home-brand-row">
-        <view class="brand-wrap">
-          <view class="brand-badge">幻</view>
-          <view>
-            <view class="brand-title">幻头 <text class="brand-accent">Phantom</text></view>
-            <view class="brand-subtitle">AI 驱动，一键定制你的专属幻象头像</view>
-          </view>
+    <view class="container home-fixed-inner" style="{{headerStyle}}">
+      <view class="home-topbar">
+        <view class="home-mark">
+          <image wx:if="{{brandingLogoUrl}}" class="home-mark-image" mode="aspectFill" src="{{brandingLogoUrl}}" />
+          <view wx:else>幻</view>
         </view>
-        <view class="head-actions">
-          <view class="head-icon-btn" bindtap="goPoints">铃</view>
-          <view class="head-icon-btn" bindtap="goSquare">搜</view>
-        </view>
+        <view class="home-header-title">Phantom</view>
+        <view class="home-profile-btn" bindtap="goProfile">我</view>
       </view>
     </view>
   </view>
 
   <view class="container fixed-tab-space home-body">
-    <view class="home-fixed-space"></view>
+    <view class="home-fixed-space" style="{{headerSpacerStyle}}"></view>
 
-    <view class="section-head home-section-head">
-      <view>
-        <view class="title-lg">风格迁移</view>
-        <view class="home-kicker">CHOOSE TEMPLATE</view>
-      </view>
-      <view class="section-more" bindtap="goStyleTransfer">查看全部</view>
-    </view>
-
-    <scroll-view scroll-x class="template-scroll" enable-flex="true">
-      <block wx:for="{{styleTemplates}}" wx:key="id">
-        <view class="template-show-card" data-style="{{item.name}}" bindtap="onTemplateTap">
-          <view class="template-show-cover {{item.coverClass}}">
-            <image wx:if="{{item.imageUrl}}" class="preview-image" mode="aspectFill" src="{{item.imageUrl}}" />
-            <view class="template-cover-mask"></view>
-            <view class="template-tag">{{item.badge}}</view>
-          </view>
-          <view class="template-show-body">
-            <view>
-              <view class="title-md">{{item.name}}</view>
-              <view class="subtitle mt-8">{{item.desc}}</view>
+    <view class="hero-shell">
+      <swiper class="hero-swiper" circular="true" current="{{currentHeroIndex}}" bindchange="onHeroChange">
+        <block wx:for="{{heroSlides}}" wx:key="id">
+          <swiper-item>
+            <view class="hero-slide {{!item.imageUrl ? item.coverClass : ''}}" data-style="{{item.styleName}}" bindtap="onHeroSlideTap">
+              <image wx:if="{{item.imageUrl}}" class="hero-slide-image" mode="aspectFill" src="{{item.imageUrl}}" />
+              <view class="hero-slide-mask"></view>
+              <view class="hero-slide-content">
+                <view class="hero-badge">{{item.badge}}</view>
+                <view class="hero-title">{{item.title}}</view>
+                <view class="hero-copy">{{item.desc}}</view>
+                <button class="hero-btn" data-style="{{item.styleName}}" catchtap="onHeroCtaTap">
+                  {{item.ctaText}} →
+                </button>
+              </view>
             </view>
-            <view class="template-add-btn">＋</view>
-          </view>
-        </view>
-      </block>
-    </scroll-view>
+          </swiper-item>
+        </block>
+      </swiper>
 
-    <view class="text-banner-card">
-      <view class="text-banner-copy">
-        <view class="title-lg">AI 文生图</view>
-        <view class="subtitle mt-12">输入文字描述，AI 为你构筑无限可能。用一句话生成专属幻头。</view>
-        <button class="banner-action-btn" bindtap="goTextGenerate">立即生成</button>
+      <view class="hero-dots">
+        <block wx:for="{{heroSlides}}" wx:key="id">
+          <view class="hero-dot {{currentHeroIndex===index ? 'hero-dot-active' : ''}}"></view>
+        </block>
       </view>
-      <view class="text-banner-icon">文</view>
     </view>
 
-    <view class="feature-row">
-      <block wx:for="{{featureItems}}" wx:key="key">
-        <view class="feature-card" data-key="{{item.key}}" bindtap="onFeatureTap">
-          <view class="feature-icon {{item.tone}}">{{item.key==='smart-edit' ? '笔' : '景'}}</view>
-          <view>
-            <view class="feature-title">{{item.title}}</view>
-            <view class="feature-note">{{item.note}}</view>
+    <view class="quick-actions-row">
+      <block wx:for="{{quickActions}}" wx:key="key">
+        <view class="quick-entry" data-key="{{item.key}}" bindtap="onQuickActionTap">
+          <view class="quick-entry-box">
+            <view class="quick-entry-glyph">{{item.glyph}}</view>
           </view>
+          <view class="quick-entry-label">{{item.title}}</view>
         </view>
       </block>
     </view>

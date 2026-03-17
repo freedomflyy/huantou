@@ -7,7 +7,8 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  padding: 14rpx 20rpx calc(18rpx + env(safe-area-inset-bottom));
+  gap: 12rpx;
+  padding: 16rpx 18rpx calc(20rpx + env(safe-area-inset-bottom));
   box-sizing: border-box;
   background: rgba(255, 255, 255, 0.9);
   border-top: 1px solid rgba(242, 223, 207, 0.95);
@@ -17,16 +18,46 @@
 .tab-item {
   flex: 1;
   display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a3b0c3;
+}
+
+.tab-card {
+  width: 100%;
+  max-width: 152rpx;
+  min-height: 116rpx;
+  padding: 10rpx 10rpx 12rpx;
+  border-radius: 32rpx;
+  box-sizing: border-box;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end;
-  color: #a3b0c3;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(242, 223, 207, 0.96);
+  box-shadow: 0 12rpx 24rpx rgba(225, 146, 92, 0.08);
+}
+
+.tab-card-active {
+  background: linear-gradient(180deg, rgba(255, 247, 240, 0.98), rgba(255, 237, 224, 0.96));
+  border-color: rgba(245, 106, 33, 0.18);
+  box-shadow: 0 14rpx 28rpx rgba(245, 106, 33, 0.1);
+}
+
+.tab-card-primary {
+  min-height: 132rpx;
+  padding-top: 0;
+  margin-top: -34rpx;
+  background: rgba(255, 242, 232, 0.94);
+  border-color: rgba(245, 106, 33, 0.1);
+  box-shadow: 0 18rpx 34rpx rgba(245, 106, 33, 0.12);
 }
 
 .tab-icon-shell {
   width: 58rpx;
   height: 58rpx;
-  border-radius: 999rpx;
+  border-radius: 24rpx;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -36,18 +67,19 @@
 .tab-icon-shell-primary {
   width: 98rpx;
   height: 98rpx;
-  margin-top: -34rpx;
+  margin-top: -18rpx;
   background: rgba(245, 106, 33, 0.1);
 }
 
 .tab-icon {
   width: 54rpx;
   height: 54rpx;
-  border-radius: 999rpx;
+  border-radius: 18rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
+  background: rgba(255, 246, 238, 0.95);
+  border: 1px solid rgba(242, 223, 207, 0.9);
   color: #a3b0c3;
   font-size: 24rpx;
   font-weight: 700;
@@ -56,6 +88,8 @@
 .tab-icon-primary {
   width: 82rpx;
   height: 82rpx;
+  border-radius: 28rpx;
+  border: none;
   background: linear-gradient(135deg, #ff7a1f 0%, #f56a21 100%);
   color: #ffffff;
   font-size: 42rpx;
@@ -73,4 +107,9 @@
 
 .tab-item.active .tab-icon {
   color: #f56a21;
+  border-color: rgba(245, 106, 33, 0.12);
+}
+
+.tab-item.active .tab-icon:not(.tab-icon-primary) {
+  background: rgba(255, 237, 224, 0.94);
 }
