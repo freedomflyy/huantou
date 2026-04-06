@@ -1,31 +1,70 @@
-# 幻头小程序 V2
+# 幻头小程序前端
 
-暗色 + 粉紫主题的产品化前端版本，和旧 `miniprogram/` 并行维护。
+`miniprogram_v2` 是本项目的小程序客户端，使用微信原生小程序技术栈实现，负责承载头像生成的完整用户流程。
 
-## 运行
+## 技术栈
 
-1. 微信开发者工具导入目录：`/home/zbzl/cs/miniprogram_v2`
-2. AppID：`wx3078cab5ea320996`
-3. 确认 request 合法域名包含：`https://828md02534xr.vicp.fun`
-4. 确认 downloadFile 合法域名包含：`https://huanto-1331012038.cos.ap-beijing.myqcloud.com`
+- 微信原生小程序
+- WXML
+- WXSS
+- JavaScript
 
-## 页面
+## 页面结构
 
-- `login`
-- `home`
-- `create-menu`
-- `text-generate`
-- `image-edit`
-- `image-reference`
-- `quick-edit`
-- `loading`
-- `result`
-- `history`
-- `assets`
-- `profile`
-- `service`
-- `points`
+- `login`：登录页
+- `home`：首页
+- `square`：广场 / 灵感流
+- `create-menu`：创作入口
+- `text-generate`：文生图
+- `image-edit`：图生图
+- `image-reference`：风格迁移
+- `quick-edit`：快速编辑
+- `loading`：任务执行状态
+- `result`：结果页
+- `history`：历史记录
+- `assets`：作品与收藏
+- `profile`：个人中心
+- `points`：积分页
 
-## 关键链路
+## 与后端的关系
 
-`POST /tasks` -> 后端异步队列消费 -> `GET /tasks/{id}` 轮询 -> `result`
+核心交互链路如下：
+
+```text
+登录 -> 创建任务 -> 查询任务状态 -> 查看结果 -> 保存到资产列表
+```
+
+前端主要依赖后端提供：
+
+- 认证接口
+- 积分接口
+- 任务接口
+- 资产接口
+- 公共素材接口
+
+## 本地调试
+
+1. 用微信开发者工具打开本目录
+2. 将 `config.js` 中的 API 地址改成你的本地或测试环境地址
+3. 在微信公众平台配置合法域名
+4. 联调 `backend` 服务
+
+默认配置中：
+
+- 开发者工具优先访问 `http://127.0.0.1:8000`
+- `tunnel` 地址为占位示例，需要替换成你自己的测试域名
+
+## 注意事项
+
+- 仓库中的 `AppID` 已替换为占位值
+- 私有项目配置文件未纳入版本控制
+- 素材地址和部分演示数据已脱敏处理
+
+## 展示重点
+
+这个前端不是静态壳子，而是围绕真实 API 组织的业务小程序，重点展示：
+
+- 多页面业务编排能力
+- 登录态和会话刷新处理
+- 异步任务轮询与结果回流
+- 小程序端的数据组织与状态管理

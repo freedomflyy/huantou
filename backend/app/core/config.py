@@ -18,14 +18,12 @@ class Settings(BaseSettings):
     rate_limit_auth_per_minute: int = 30
     rate_limit_task_execute_per_minute: int = 20
 
-    database_url: str = (
-        "postgresql+psycopg://huanto_app:HuantoDev%402026@127.0.0.1:5433/huanto"
-    )
+    database_url: str = "postgresql+psycopg://app_user:change_me@127.0.0.1:5432/app_db"
 
     image_retention_days: int = 7
     points_signup_bonus: int = 100
     points_daily_bonus: int = 10
-    points_redeem_code: str | None = "zbzl"
+    points_redeem_code: str | None = None
     points_redeem_points: int = 1000
     points_invite_share_bonus: int = 100
     points_txt2img_cost: int = 20
@@ -37,16 +35,14 @@ class Settings(BaseSettings):
     auth_accept_mock_token: bool = False
     auth_force_disable_debug_user_header_in_prod: bool = True
     auth_force_disable_mock_token_in_prod: bool = True
-    auth_review_login_enabled: bool = True
-    auth_review_login_openid: str = "review_tester_account"
+    auth_review_login_enabled: bool = False
+    auth_review_login_openid: str = "demo_review_account"
     auth_review_login_nickname: str = "审核测试账号"
-    auth_review_login_avatar_url: str = (
-        "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/public/login-logo.jpg"
-    )
-    auth_review_login_username: str = "audit"
-    auth_review_login_password: str = "phantom2026"
+    auth_review_login_avatar_url: str = "https://cdn.example.com/materials/public/login-logo.jpg"
+    auth_review_login_username: str = "reviewer"
+    auth_review_login_password: str = "change_me_for_demo"
     auth_review_login_min_points_balance: int = 5000
-    jwt_secret_key: str = "change_me_in_production"
+    jwt_secret_key: str = "dev-only-change-me-to-a-long-random-secret"
     jwt_algorithm: str = "HS256"
     jwt_access_token_expire_minutes: int = 120
     jwt_refresh_token_expire_days: int = 14

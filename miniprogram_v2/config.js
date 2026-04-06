@@ -1,7 +1,7 @@
-const API_ENV = "tunnel";
+const API_ENV = "local";
 const API_HOSTS = {
   local: "http://127.0.0.1:8000",
-  tunnel: "https://828md02534xr.vicp.fun",
+  tunnel: "https://api.example.com",
 };
 
 function getApiBaseUrl() {

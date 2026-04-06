@@ -1,26 +1,26 @@
 {
   "login_logo": {
-    "storage_provider": "cos",
+    "storage_provider": "local",
     "object_key": "materials/public/login-logo.jpg",
-    "file_url": "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/public/login-logo.jpg",
+    "file_url": "/api/v1/assets/local/materials/public/login-logo.jpg",
     "mime_type": "image/jpeg"
   },
   "review_login_icon": {
-    "storage_provider": "cos",
+    "storage_provider": "local",
     "object_key": "materials/public/review-login-icon.png",
-    "file_url": "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/public/review-login-icon.png",
+    "file_url": "/api/v1/assets/local/materials/public/review-login-icon.png",
     "mime_type": "image/png"
   },
   "home_hero": {
-    "storage_provider": "cos",
+    "storage_provider": "local",
     "object_key": "materials/public/home-hero-style-transfer.png",
-    "file_url": "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/public/home-hero-style-transfer.png",
+    "file_url": "/api/v1/assets/local/materials/public/home-hero-style-transfer.png",
     "mime_type": "image/png"
   },
   "share_card": {
-    "storage_provider": "cos",
+    "storage_provider": "local",
     "object_key": "materials/public/share-card-style-transfer.png",
-    "file_url": "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/public/share-card-style-transfer.png",
+    "file_url": "/api/v1/assets/local/materials/public/share-card-style-transfer.png",
     "mime_type": "image/png"
   }
 }
