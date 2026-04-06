@@ -37,6 +37,15 @@ class Settings(BaseSettings):
     auth_accept_mock_token: bool = False
     auth_force_disable_debug_user_header_in_prod: bool = True
     auth_force_disable_mock_token_in_prod: bool = True
+    auth_review_login_enabled: bool = True
+    auth_review_login_openid: str = "review_tester_account"
+    auth_review_login_nickname: str = "审核测试账号"
+    auth_review_login_avatar_url: str = (
+        "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/public/login-logo.jpg"
+    )
+    auth_review_login_username: str = "audit"
+    auth_review_login_password: str = "phantom2026"
+    auth_review_login_min_points_balance: int = 5000
     jwt_secret_key: str = "change_me_in_production"
     jwt_algorithm: str = "HS256"
     jwt_access_token_expire_minutes: int = 120

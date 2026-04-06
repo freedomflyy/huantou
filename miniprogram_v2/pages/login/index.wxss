@@ -2,6 +2,7 @@
   min-height: 100vh;
   background: linear-gradient(180deg, #fff9f3 0%, #ffe9d1 100%);
   overflow: hidden;
+  position: relative;
 }
 
 .login-shell {

@@ -5,11 +5,11 @@
 
   <view class="container login-shell">
     <view class="login-brand-block">
-      <view class="login-brand-avatar">
+      <view class="login-brand-avatar" bindtap="handleLogoTap">
         <image wx:if="{{brandingLogoUrl}}" class="login-brand-avatar-image" mode="aspectFill" src="{{brandingLogoUrl}}" />
         <view wx:else class="login-brand-avatar-fallback">幻</view>
       </view>
-      <view class="login-brand-title">幻头</view>
+      <view class="login-brand-title" bindtap="handleLogoTap">幻头</view>
       <view class="login-brand-subtitle">让每一张头像都充满艺术感</view>
     </view>
 
@@ -69,6 +69,35 @@
       <view class="login-sheet-actions">
         <button class="login-sheet-cancel" bindtap="closeProfileSheet">稍后再说</button>
         <button class="login-sheet-confirm" loading="{{submitting}}" bindtap="enterApp">确认并登录</button>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{reviewSheetVisible}}" class="login-sheet-mask" catchtap="closeReviewSheet">
+    <view class="login-sheet-panel" catchtap="noop">
+      <view class="login-sheet-title">测试账号入口</view>
+      <view class="login-sheet-subtitle">请输入审核测试账号与密码，进入固定测试账号。</view>
+
+      <input
+        class="login-sheet-input"
+        maxlength="32"
+        placeholder="请输入测试账号"
+        value="{{reviewUsername}}"
+        bindinput="onReviewUsernameInput"
+      />
+
+      <input
+        class="login-sheet-input"
+        password="true"
+        maxlength="32"
+        placeholder="请输入测试密码"
+        value="{{reviewPassword}}"
+        bindinput="onReviewPasswordInput"
+      />
+
+      <view class="login-sheet-actions">
+        <button class="login-sheet-cancel" bindtap="closeReviewSheet">取消</button>
+        <button class="login-sheet-confirm" loading="{{submitting}}" bindtap="handleReviewLogin">进入测试账号</button>
       </view>
     </view>
   </view>

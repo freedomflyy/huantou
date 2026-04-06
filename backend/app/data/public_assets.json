@@ -5,6 +5,12 @@
     "file_url": "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/public/login-logo.jpg",
     "mime_type": "image/jpeg"
   },
+  "review_login_icon": {
+    "storage_provider": "cos",
+    "object_key": "materials/public/review-login-icon.png",
+    "file_url": "https://huanto-1331012038.cos.ap-beijing.myqcloud.com/materials/public/review-login-icon.png",
+    "mime_type": "image/png"
+  },
   "home_hero": {
     "storage_provider": "cos",
     "object_key": "materials/public/home-hero-style-transfer.png",

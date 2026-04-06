@@ -11,6 +11,13 @@ class WechatLoginRequest(BaseModel):
     avatar_url: str | None = None
 
 
+class ReviewLoginRequest(BaseModel):
+    username: str | None = Field(default=None, max_length=64)
+    password: str | None = Field(default=None, max_length=128)
+    nickname: str | None = Field(default=None, max_length=64)
+    avatar_url: str | None = None
+
+
 class WechatLoginResponse(BaseModel):
     access_token: str
     refresh_token: str

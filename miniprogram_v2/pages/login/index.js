@@ -1,4 +1,4 @@
-const { loginWithWechat, logoutCurrent } = require("../../utils/auth");
+const { loginWithWechat, loginWithReviewAccount, logoutCurrent } = require("../../utils/auth");
 const { upload, patch } = require("../../utils/request");
 const { getUser, updateUser } = require("../../utils/session");
 const { fetchPublicAssets } = require("../../utils/public-assets");
@@ -14,6 +14,15 @@ function syncAppSessionSafe() {
   }
 }
 
+function finishLoginFlow() {
+  const pages = getCurrentPages();
+  if (pages.length > 1) {
+    wx.navigateBack();
+    return;
+  }
+  wx.reLaunch({ url: "/pages/home/index" });
+}
+
 Page({
   data: {
     submitting: false,
@@ -24,6 +33,9 @@ Page({
     profileAvatarPath: "",
     brandingLogoUrl: "",
     profileSheetVisible: false,
+    reviewSheetVisible: false,
+    reviewUsername: "",
+    reviewPassword: "",
   },
 
   onLoad() {
@@ -44,6 +56,22 @@ Page({
       });
     } catch (err) {
       // Keep the avatar area empty when the branding asset is unavailable.
+    }
+  },
+
+  handleLogoTap() {
+    const now = Date.now();
+    if (!this._reviewTapStartedAt || now - this._reviewTapStartedAt > 1200) {
+      this._reviewTapStartedAt = now;
+      this._reviewTapCount = 1;
+      return;
+    }
+
+    this._reviewTapCount = (this._reviewTapCount || 0) + 1;
+    if (this._reviewTapCount >= 3) {
+      this._reviewTapCount = 0;
+      this._reviewTapStartedAt = 0;
+      this.openReviewSheet();
     }
   },
 
@@ -84,6 +112,21 @@ Page({
     });
   },
 
+  openReviewSheet() {
+    if (this.data.submitting) return;
+    this.setData({
+      reviewSheetVisible: true,
+      errorMsg: "",
+    });
+  },
+
+  closeReviewSheet() {
+    if (this.data.submitting) return;
+    this.setData({
+      reviewSheetVisible: false,
+    });
+  },
+
   openTerms() {
     wx.navigateTo({ url: "/pages/service/index?type=terms" });
   },
@@ -102,6 +145,52 @@ Page({
       title: tips[type] || "当前入口暂未开放",
       icon: "none",
     });
+  },
+
+  onReviewUsernameInput(e) {
+    this.setData({
+      reviewUsername: (e.detail.value || "").trim(),
+      errorMsg: "",
+    });
+  },
+
+  onReviewPasswordInput(e) {
+    this.setData({
+      reviewPassword: (e.detail.value || "").trim(),
+      errorMsg: "",
+    });
+  },
+
+  async handleReviewLogin() {
+    if (this.data.submitting) return;
+    if (!this.data.agreed) {
+      this.validateProfile();
+      return;
+    }
+    const username = (this.data.reviewUsername || "").trim();
+    const password = (this.data.reviewPassword || "").trim();
+    if (!username || !password) {
+      this.setData({ errorMsg: "请输入测试账号和密码" });
+      return;
+    }
+    try {
+      this.setData({ submitting: true, errorMsg: "" });
+      await loginWithReviewAccount({ username, password });
+      wx.showToast({
+        title: "已进入审核测试账号",
+        icon: "none",
+      });
+      this.setData({
+        reviewSheetVisible: false,
+      });
+      finishLoginFlow();
+    } catch (err) {
+      this.setData({
+        errorMsg: err.message || "测试账号登录失败，请稍后再试",
+      });
+    } finally {
+      this.setData({ submitting: false });
+    }
   },
 
   validateProfile() {
@@ -175,7 +264,7 @@ Page({
       this.setData({
         profileSheetVisible: false,
       });
-      wx.reLaunch({ url: "/pages/home/index" });
+      finishLoginFlow();
     } catch (err) {
       if (loggedIn) {
         try {

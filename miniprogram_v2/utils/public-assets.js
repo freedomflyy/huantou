@@ -10,6 +10,7 @@ function normalizeAssets(payload = {}) {
     loginLogoUrl: payload.login_logo_url || "",
     homeHeroUrl: payload.home_hero_url || "",
     shareCardUrl: payload.share_card_url || "",
+    reviewLoginIconUrl: payload.review_login_icon_url || "",
   };
 }
 

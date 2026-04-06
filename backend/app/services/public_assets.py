@@ -36,8 +36,10 @@ def load_public_assets() -> PublicAssetsResponse:
     login_logo = raw.get("login_logo") or {}
     home_hero = raw.get("home_hero") or {}
     share_card = raw.get("share_card") or home_hero
+    review_login_icon = raw.get("review_login_icon") or {}
     return PublicAssetsResponse(
         login_logo_url=_resolve_url(login_logo),
         home_hero_url=_resolve_url(home_hero),
         share_card_url=_resolve_url(share_card),
+        review_login_icon_url=_resolve_url(review_login_icon),
     )

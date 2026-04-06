@@ -7,3 +7,4 @@ class PublicAssetsResponse(BaseModel):
     login_logo_url: str
     home_hero_url: str
     share_card_url: str
+    review_login_icon_url: str

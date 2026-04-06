@@ -46,6 +46,19 @@ async function loginWithWechat(profile = {}) {
   return data;
 }
 
+async function loginWithReviewAccount(profile = {}) {
+  const payload = {
+    username: profile.username || "",
+    password: profile.password || "",
+    nickname: profile.nickname || "审核测试账号",
+    avatar_url: profile.avatar_url || undefined,
+  };
+  const data = await post("/auth/review-login", payload);
+  saveSession(data);
+  syncAppSession();
+  return data;
+}
+
 function ensureSession() {
   if (isLoggedIn() && hasRealProfile()) {
     return Promise.resolve(getUser());
@@ -76,6 +89,7 @@ async function logoutCurrent() {
 
 module.exports = {
   loginWithWechat,
+  loginWithReviewAccount,
   ensureSession,
   logoutCurrent,
 };

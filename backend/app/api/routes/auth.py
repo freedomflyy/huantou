@@ -7,6 +7,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_current_user
+from app.core.config import settings
 from app.db.session import get_db
 from app.models import PointsChangeType, User, UserStatus
 from app.schemas.auth import (
@@ -16,6 +17,7 @@ from app.schemas.auth import (
     LogoutResponse,
     RefreshTokenRequest,
     RefreshTokenResponse,
+    ReviewLoginRequest,
     WechatLoginRequest,
     WechatLoginResponse,
 )
@@ -32,6 +34,34 @@ from app.services.refresh_tokens import (
 from app.services.wechat_auth import WechatAuthError, resolve_openid_from_code
 
 router = APIRouter(prefix="/auth", tags=["auth"])
+
+
+def _build_login_response(
+    db: Session,
+    *,
+    user: User,
+    is_new_user: bool,
+    signup_bonus_granted: bool,
+    daily_bonus_granted: bool,
+) -> WechatLoginResponse:
+    pair = create_token_pair(user.id)
+    create_refresh_token_record(
+        db,
+        user_id=user.id,
+        jti=pair.refresh_jti,
+        expires_at=pair.refresh_expires_at,
+    )
+    db.commit()
+    return WechatLoginResponse(
+        access_token=pair.access_token,
+        refresh_token=pair.refresh_token,
+        token_type=pair.token_type,
+        expires_in=pair.expires_in,
+        is_new_user=is_new_user,
+        signup_bonus_granted=signup_bonus_granted,
+        daily_bonus_granted=daily_bonus_granted,
+        user=UserInfo.model_validate(user),
+    )
 
 
 @router.post("/wechat-login", response_model=WechatLoginResponse)
@@ -82,24 +112,86 @@ def wechat_login(payload: WechatLoginRequest, db: Session = Depends(get_db)) -> 
     user.last_login_at = now
     db.commit()
     db.refresh(user)
-
-    pair = create_token_pair(user.id)
-    create_refresh_token_record(
+    return _build_login_response(
         db,
-        user_id=user.id,
-        jti=pair.refresh_jti,
-        expires_at=pair.refresh_expires_at,
-    )
-    db.commit()
-    return WechatLoginResponse(
-        access_token=pair.access_token,
-        refresh_token=pair.refresh_token,
-        token_type=pair.token_type,
-        expires_in=pair.expires_in,
+        user=user,
         is_new_user=is_new_user,
         signup_bonus_granted=signup_bonus_granted,
         daily_bonus_granted=daily_bonus_granted,
-        user=UserInfo.model_validate(user),
+    )
+
+
+@router.post("/review-login", response_model=WechatLoginResponse)
+def review_login(
+    payload: ReviewLoginRequest | None = None,
+    db: Session = Depends(get_db),
+) -> WechatLoginResponse:
+    if settings.app_env == "prod" or not settings.auth_review_login_enabled:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Not found")
+
+    now = datetime.now(timezone.utc)
+    rules = get_points_rules()
+    profile = payload or ReviewLoginRequest()
+    username = (profile.username or "").strip()
+    password = (profile.password or "").strip()
+
+    if username != settings.auth_review_login_username or password != settings.auth_review_login_password:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="账号或密码不正确")
+
+    user = db.scalar(select(User).where(User.wx_openid == settings.auth_review_login_openid))
+    is_new_user = user is None
+    signup_bonus_granted = False
+    daily_bonus_granted = False
+
+    if not user:
+        user = User(
+            wx_openid=settings.auth_review_login_openid,
+            nickname=settings.auth_review_login_nickname,
+            avatar_url=settings.auth_review_login_avatar_url,
+            points_balance=0,
+        )
+        db.add(user)
+        db.flush()
+
+        if rules.signup_bonus > 0:
+            add_points_ledger(
+                db,
+                user=user,
+                change_type=PointsChangeType.SIGNUP_BONUS,
+                delta=rules.signup_bonus,
+                reason="review_login_signup_bonus",
+                operator="system",
+            )
+            signup_bonus_granted = True
+
+    nickname = (profile.nickname or settings.auth_review_login_nickname).strip()
+    avatar_url = (profile.avatar_url or settings.auth_review_login_avatar_url).strip()
+    if nickname:
+        user.nickname = nickname
+    if avatar_url:
+        user.avatar_url = avatar_url
+
+    if user.points_balance < settings.auth_review_login_min_points_balance:
+        delta = settings.auth_review_login_min_points_balance - user.points_balance
+        add_points_ledger(
+            db,
+            user=user,
+            change_type=PointsChangeType.ADMIN_ADJUST,
+            delta=delta,
+            reason="review_login_balance_topup",
+            operator="system",
+        )
+
+    daily_bonus_granted = grant_daily_bonus_if_needed(db, user=user, operator="system", now=now)
+    user.last_login_at = now
+    db.commit()
+    db.refresh(user)
+    return _build_login_response(
+        db,
+        user=user,
+        is_new_user=is_new_user,
+        signup_bonus_granted=signup_bonus_granted,
+        daily_bonus_granted=daily_bonus_granted,
     )
 
 

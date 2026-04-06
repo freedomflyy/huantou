@@ -1,5 +1,6 @@
-const { ensureLogin } = require("../../utils/guard");
+const { ensureFeatureLogin } = require("../../utils/guard");
 const { get } = require("../../utils/request");
+const { isLoggedIn, hasRealProfile } = require("../../utils/session");
 const { toAssetCardViewModel, toShowcaseCardViewModel } = require("../../utils/view-models");
 const { getShowcaseFallback } = require("../../utils/avatar-studio");
 const { getUiMetrics } = require("../../utils/ui-metrics");
@@ -40,8 +41,6 @@ Page({
   },
 
   async onShow() {
-    const ok = await ensureLogin();
-    if (!ok) return;
     await this.loadData();
   },
 
@@ -54,6 +53,7 @@ Page({
   },
 
   async loadData() {
+    const loginReady = isLoggedIn() && hasRealProfile();
     try {
       const showcaseRes = await get("/showcase?limit=24");
       const gallery = decorateGallery((showcaseRes.items || []).map(toShowcaseCardViewModel));
@@ -63,6 +63,7 @@ Page({
         return;
       }
     } catch (err) {
+      if (loginReady) {
       try {
         const [assetsRes, tasksRes] = await Promise.all([
           get("/assets?limit=24"),
@@ -81,6 +82,7 @@ Page({
       } catch (nestedErr) {
         // Fall through to curated data.
       }
+      }
     }
 
     const fallbackGallery = getFallbackGallery();
@@ -94,13 +96,15 @@ Page({
     this.setDisplayGallery(tab, this.data.gallery);
   },
 
-  onGalleryTap(e) {
+  async onGalleryTap(e) {
     const taskId = e.currentTarget.dataset.taskid;
     const style = e.currentTarget.dataset.style || "";
     if (taskId) {
       wx.navigateTo({ url: `/pages/result/index?taskId=${encodeURIComponent(taskId)}` });
       return;
     }
+    const ok = await ensureFeatureLogin("登录后才可以生成同款头像");
+    if (!ok) return;
     if (style) {
       wx.navigateTo({ url: `/pages/image-reference/index?style=${encodeURIComponent(style)}` });
       return;

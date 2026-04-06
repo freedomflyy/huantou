@@ -1,4 +1,3 @@
-const { ensureLogin } = require("../../utils/guard");
 const { get } = require("../../utils/request");
 
 const OUTPUT_SIZE = 1024;
@@ -168,8 +167,6 @@ Page({
   },
 
   async onShow() {
-    const ok = await ensureLogin();
-    if (!ok) return;
     await this.loadMaterials();
     if (this.data.taskId && !isLocalPath(this.data.imageUrl)) {
       await this.loadPreview();

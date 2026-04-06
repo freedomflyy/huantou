@@ -1,29 +1,38 @@
-const { ensureLogin } = require("../../utils/guard");
+const { ensureFeatureLogin } = require("../../utils/guard");
+const { logoutCurrent } = require("../../utils/auth");
 const { get, post, upload, patch } = require("../../utils/request");
-const { getUser, updateUser } = require("../../utils/session");
+const { getUser, updateUser, isLoggedIn, hasRealProfile } = require("../../utils/session");
 const { getUiMetrics } = require("../../utils/ui-metrics");
 const { fetchPublicAssets } = require("../../utils/public-assets");
+
+const AUTH_MENUS = [
+  { key: "assets", glyph: "作", title: "我的作品", note: "从这里进入作品集和收藏" },
+  { key: "history", glyph: "史", title: "创作记录", note: "查看每一次生成过程" },
+  { key: "points", glyph: "会", title: "会员中心", note: "积分、权益和套餐" },
+  { key: "about", glyph: "关于", title: "关于幻头", note: "使用帮助与产品说明" },
+  { key: "logout", glyph: "退", title: "退出登录", note: "退出当前账号，回到游客浏览状态" },
+];
+
+const GUEST_MENUS = [
+  { key: "login", glyph: "登", title: "立即登录", note: "登录后可查看作品、积分和创作记录" },
+  { key: "about", glyph: "关于", title: "关于幻头", note: "使用帮助与产品说明" },
+];
 
 Page({
   data: {
     user: {
-      nickname: "微信用户",
-      signature: "把日常瞬间，变成温柔头像。",
+      nickname: "游客",
+      signature: "先随意逛逛，喜欢了再登录开始创作。",
       pointsBalance: 0,
       works: 0,
       favorites: 0,
-      avatarText: "桃",
+      avatarText: "游",
       avatarUrl: "",
     },
-    menus: [
-      { key: "assets", glyph: "作", title: "我的作品", note: "从这里进入作品集和收藏" },
-      { key: "history", glyph: "史", title: "创作记录", note: "查看每一次生成过程" },
-      { key: "points", glyph: "会", title: "会员中心", note: "积分、权益和套餐" },
-      { key: "about", glyph: "关于", title: "关于幻头", note: "使用帮助与产品说明" },
-    ],
+    menus: GUEST_MENUS,
     pageTopStyle: "",
     inviteRewardPoints: 100,
-    inviteStatusText: "分享成功即可获得 100 积分",
+    inviteStatusText: "登录后可邀请新朋友并领取积分奖励",
     inviteStatusTone: "idle",
     shareCardUrl: "",
     inviteRewardClaiming: false,
@@ -32,6 +41,7 @@ Page({
     profileDraftNickname: "",
     profileDraftAvatarUrl: "",
     profileDraftAvatarPath: "",
+    guestMode: true,
   },
 
   onLoad() {
@@ -42,9 +52,34 @@ Page({
   },
 
   async onShow() {
-    const ok = await ensureLogin();
-    if (!ok) return;
+    if (!isLoggedIn() || !hasRealProfile()) {
+      this.applyGuestState();
+      return;
+    }
     await this.loadData();
+  },
+
+  applyGuestState() {
+    const guestUser = {
+      nickname: "游客",
+      signature: "先随意逛逛，喜欢了再登录开始创作。",
+      pointsBalance: 0,
+      works: 0,
+      favorites: 0,
+      avatarText: "游",
+      avatarUrl: "",
+    };
+    this.setData({
+      user: guestUser,
+      menus: GUEST_MENUS,
+      inviteRewardPoints: 100,
+      inviteStatusText: "登录后可邀请新朋友并领取积分奖励",
+      inviteStatusTone: "idle",
+      shareCardUrl: "",
+      guestMode: true,
+      profileEditorVisible: false,
+    });
+    this.syncDraftProfile(guestUser);
   },
 
   syncDraftProfile(user) {
@@ -79,10 +114,12 @@ Page({
       });
       this.setData({
         user,
+        menus: AUTH_MENUS,
         inviteRewardPoints: (balanceRes.rules && balanceRes.rules.invite_share_bonus) || 100,
         inviteStatusText: `分享成功即可获得 ${(balanceRes.rules && balanceRes.rules.invite_share_bonus) || 100} 积分`,
         inviteStatusTone: "idle",
         shareCardUrl: (publicAssets && publicAssets.shareCardUrl) || "",
+        guestMode: false,
       });
       this.syncDraftProfile(user);
     } catch (err) {
@@ -97,16 +134,22 @@ Page({
       };
       this.setData({
         user,
+        menus: AUTH_MENUS,
         inviteRewardPoints: 100,
         inviteStatusText: "分享成功即可获得 100 积分",
         inviteStatusTone: "idle",
         shareCardUrl: "",
+        guestMode: false,
       });
       this.syncDraftProfile(user);
     }
   },
 
   openProfileEditor() {
+    if (this.data.guestMode) {
+      this.goLoginForFeature("登录后可以修改头像和昵称");
+      return;
+    }
     const user = this.data.user || {};
     this.setData({
       profileEditorVisible: true,
@@ -198,6 +241,18 @@ Page({
 
   onMenuTap(e) {
     const key = e.currentTarget.dataset.key;
+    if (key === "login") {
+      this.goLoginForFeature("登录后可查看你的作品与积分");
+      return;
+    }
+    if (key === "logout") {
+      this.handleLogout();
+      return;
+    }
+    if (key !== "about" && this.data.guestMode) {
+      this.goLoginForFeature("登录后可查看你的个人数据");
+      return;
+    }
     const map = {
       assets: "/pages/assets/index",
       history: "/pages/history/index",
@@ -207,6 +262,35 @@ Page({
     const url = map[key];
     if (!url) return;
     wx.navigateTo({ url });
+  },
+
+  async goLoginForFeature(message) {
+    await ensureFeatureLogin(message);
+  },
+
+  handleLogout() {
+    wx.showModal({
+      title: "退出登录",
+      content: "退出后仍可浏览首页和广场，创作功能需重新登录。",
+      confirmText: "退出",
+      confirmColor: "#ec5b13",
+      success: async (res) => {
+        if (!res.confirm) return;
+        try {
+          await logoutCurrent();
+          this.applyGuestState();
+          wx.showToast({
+            title: "已退出登录",
+            icon: "none",
+          });
+        } catch (err) {
+          wx.showToast({
+            title: "退出失败，请重试",
+            icon: "none",
+          });
+        }
+      },
+    });
   },
 
   async claimInviteReward() {
@@ -255,6 +339,10 @@ Page({
   },
 
   onInviteTap() {
+    if (this.data.guestMode) {
+      this.goLoginForFeature("登录后才可以邀请新朋友");
+      return;
+    }
     this.setData({
       inviteStatusText: `发起一次分享后会自动领取 ${this.data.inviteRewardPoints || 100} 积分`,
       inviteStatusTone: "hint",
@@ -262,6 +350,12 @@ Page({
   },
 
   onShareAppMessage(res) {
+    if (this.data.guestMode) {
+      return {
+        title: "来幻头，一起生成你的专属头像",
+        path: "/pages/login/index",
+      };
+    }
     const baseUser = getUser() || {};
     const path = baseUser.id
       ? `/pages/login/index?scene=invite&inviter=${baseUser.id}`
@@ -278,6 +372,12 @@ Page({
   },
 
   onShareTimeline() {
+    if (this.data.guestMode) {
+      return {
+        title: "来幻头，一起生成你的专属头像",
+        query: "",
+      };
+    }
     const baseUser = getUser() || {};
     const query = baseUser.id ? `scene=invite&inviter=${baseUser.id}` : "scene=invite";
     const timelinePayload = {

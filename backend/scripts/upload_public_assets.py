@@ -15,6 +15,10 @@ PUBLIC_ASSETS = {
         "source_path": ROOT_DIR / "贴纸、头像框" / "OIP-C.jpg",
         "object_key": "materials/public/login-logo.jpg",
     },
+    "review_login_icon": {
+        "source_path": ROOT_DIR / "贴纸、头像框" / "贴纸" / "小樱图标" / "雪の图标 微博@草莓味的小熊抱28.png",
+        "object_key": "materials/public/review-login-icon.png",
+    },
     "home_hero": {
         "source_path": SOURCE_ASSET_ROOT / "home-hero-style-transfer.png",
         "object_key": "materials/public/home-hero-style-transfer.png",

@@ -1,6 +1,6 @@
-const { ensureLogin } = require("../../utils/guard");
+const { ensureFeatureLogin } = require("../../utils/guard");
 const { get } = require("../../utils/request");
-const { getUser } = require("../../utils/session");
+const { getUser, isLoggedIn, hasRealProfile } = require("../../utils/session");
 const { toAssetCardViewModel, toShowcaseCardViewModel } = require("../../utils/view-models");
 const { getStyleTemplates, getShowcaseFallback } = require("../../utils/avatar-studio");
 const { getUiMetrics } = require("../../utils/ui-metrics");
@@ -108,8 +108,6 @@ Page({
   },
 
   async onShow() {
-    const ok = await ensureLogin();
-    if (!ok) return;
     await this.loadData();
   },
 
@@ -125,13 +123,14 @@ Page({
     const user = getUser() || {};
     const fallbackGallery = getFallbackGallery();
     const fallbackTemplates = getStyleTemplates();
+    const loginReady = isLoggedIn() && hasRealProfile();
     let gallery = fallbackGallery;
     let styleTemplates = attachTemplateImages(fallbackTemplates, fallbackGallery);
     let publicAssets = null;
 
     this.setData({
       user: {
-        nickname: user.nickname || "创作者",
+        nickname: user.nickname || "游客",
       },
     });
 
@@ -141,7 +140,7 @@ Page({
       if (galleryItems.length) {
         gallery = galleryItems;
         styleTemplates = attachTemplateImages(fallbackTemplates, galleryItems);
-      } else {
+      } else if (loginReady) {
         const [assetsRes, tasksRes] = await Promise.all([
           get("/assets?limit=12"),
           get("/tasks?limit=50"),
@@ -157,7 +156,8 @@ Page({
         }
       }
     } catch (err) {
-      try {
+      if (loginReady) {
+        try {
         const [assetsRes, tasksRes] = await Promise.all([
           get("/assets?limit=12"),
           get("/tasks?limit=50"),
@@ -171,8 +171,9 @@ Page({
           gallery = assetGallery;
           styleTemplates = attachTemplateImages(fallbackTemplates, assetGallery);
         }
-      } catch (nestedErr) {
-        // Keep fallback gallery.
+        } catch (nestedErr) {
+          // Keep fallback gallery.
+        }
       }
     }
 
@@ -201,14 +202,18 @@ Page({
     this.setDisplayGallery(this.data.currentPlazaTab, gallery);
   },
 
-  goStyleTransfer(style = "") {
+  async goStyleTransfer(style = "") {
+    const ok = await ensureFeatureLogin("登录后才可以开始头像生成");
+    if (!ok) return;
     const url = style
       ? `/pages/image-reference/index?style=${encodeURIComponent(style)}`
       : "/pages/image-reference/index";
     wx.navigateTo({ url });
   },
 
-  goTextGenerate() {
+  async goTextGenerate() {
+    const ok = await ensureFeatureLogin("登录后才可以开始头像生成");
+    if (!ok) return;
     wx.navigateTo({ url: "/pages/text-generate/index" });
   },
 
@@ -216,11 +221,13 @@ Page({
     wx.reLaunch({ url: "/pages/square/index" });
   },
 
-  goProfile() {
+  async goProfile() {
+    const ok = await ensureFeatureLogin("登录后查看你的作品与积分");
+    if (!ok) return;
     wx.reLaunch({ url: "/pages/profile/index" });
   },
 
-  onQuickActionTap(e) {
+  async onQuickActionTap(e) {
     const key = e.currentTarget.dataset.key;
     const routeMap = {
       "text-generate": "/pages/text-generate/index",
@@ -228,6 +235,10 @@ Page({
       decorate: "/pages/avatar-decorate/index",
     };
     if (!routeMap[key]) return;
+    if (key !== "decorate") {
+      const ok = await ensureFeatureLogin("登录后才可以使用创作功能");
+      if (!ok) return;
+    }
     wx.navigateTo({ url: routeMap[key] });
   },
 
@@ -237,23 +248,23 @@ Page({
     });
   },
 
-  onHeroSlideTap(e) {
+  async onHeroSlideTap(e) {
     const style = e.currentTarget.dataset.style || "";
-    this.goStyleTransfer(style);
+    await this.goStyleTransfer(style);
   },
 
-  onHeroCtaTap(e) {
+  async onHeroCtaTap(e) {
     const style = e.currentTarget.dataset.style || "";
-    this.goStyleTransfer(style);
+    await this.goStyleTransfer(style);
   },
 
-  onTemplateTap(e) {
+  async onTemplateTap(e) {
     const style = e.currentTarget.dataset.style;
     if (!style) {
-      this.goStyleTransfer();
+      await this.goStyleTransfer();
       return;
     }
-    this.goStyleTransfer(style);
+    await this.goStyleTransfer(style);
   },
 
   onPlazaTabTap(e) {
@@ -262,7 +273,7 @@ Page({
     this.setDisplayGallery(tab, this.data.gallery);
   },
 
-  onGalleryTap(e) {
+  async onGalleryTap(e) {
     const taskId = e.currentTarget.dataset.taskid;
     const style = e.currentTarget.dataset.style || "";
     if (taskId) {
@@ -270,7 +281,7 @@ Page({
       return;
     }
     if (style) {
-      this.goStyleTransfer(style);
+      await this.goStyleTransfer(style);
       return;
     }
     this.goSquare();

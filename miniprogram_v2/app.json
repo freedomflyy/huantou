@@ -1,9 +1,9 @@
 {
   "pages": [
-    "pages/login/index",
     "pages/home/index",
     "pages/square/index",
     "pages/create-menu/index",
+    "pages/login/index",
     "pages/assets/index",
     "pages/profile/index",
     "pages/text-generate/index",

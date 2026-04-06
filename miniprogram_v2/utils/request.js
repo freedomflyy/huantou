@@ -31,6 +31,15 @@ function isAuthPath(path) {
 }
 
 function goLogin() {
+  const pages = getCurrentPages();
+  const current = pages[pages.length - 1];
+  if (current && current.route === "pages/login/index") {
+    return;
+  }
+  if (pages.length > 0) {
+    wx.navigateTo({ url: "/pages/login/index" });
+    return;
+  }
   wx.reLaunch({ url: "/pages/login/index" });
 }
 
@@ -105,7 +114,6 @@ function request(path, options = {}) {
             .then(() => resolve(request(path, { ...options, _retried: true })))
             .catch((err) => {
               clearSession();
-              goLogin();
               reject(err);
             });
           return;
@@ -113,7 +121,6 @@ function request(path, options = {}) {
 
         if (res.statusCode === 401 && !isAuthPath(path)) {
           clearSession();
-          goLogin();
         }
         reject(new Error(classifyError(res.statusCode, res.data)));
       },
@@ -161,7 +168,6 @@ function upload(path, filePath, options = {}) {
             .then(() => resolve(upload(path, filePath, { ...options, _retried: true })))
             .catch((err) => {
               clearSession();
-              goLogin();
               reject(err);
             });
           return;
@@ -169,7 +175,6 @@ function upload(path, filePath, options = {}) {
 
         if (res.statusCode === 401 && !isAuthPath(path)) {
           clearSession();
-          goLogin();
         }
         reject(new Error(classifyError(res.statusCode, data)));
       },

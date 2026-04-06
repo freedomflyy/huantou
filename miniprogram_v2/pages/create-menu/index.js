@@ -1,4 +1,4 @@
-const { ensureLogin } = require("../../utils/guard");
+const { ensureFeatureLogin } = require("../../utils/guard");
 const { get } = require("../../utils/request");
 const { getStyleTemplates } = require("../../utils/avatar-studio");
 const { getUiMetrics } = require("../../utils/ui-metrics");
@@ -46,8 +46,6 @@ Page({
   },
 
   async onShow() {
-    const ok = await ensureLogin();
-    if (!ok) return;
     await this.loadInspirations();
   },
 
@@ -73,7 +71,7 @@ Page({
     wx.reLaunch({ url: "/pages/home/index" });
   },
 
-  onFeatureTap(e) {
+  async onFeatureTap(e) {
     const key = e.currentTarget.dataset.key;
     const routes = {
       "style-transfer": "/pages/image-reference/index",
@@ -83,11 +81,17 @@ Page({
     };
     const url = routes[key];
     if (!url) return;
+    if (key !== "decorate") {
+      const ok = await ensureFeatureLogin("登录后才可以开始创作");
+      if (!ok) return;
+    }
     wx.navigateTo({ url });
   },
 
-  onInspirationTap(e) {
+  async onInspirationTap(e) {
     const title = e.currentTarget.dataset.title;
+    const ok = await ensureFeatureLogin("登录后才可以使用风格迁移");
+    if (!ok) return;
     wx.navigateTo({
       url: `/pages/image-reference/index?style=${encodeURIComponent(title || "")}`,
     });
